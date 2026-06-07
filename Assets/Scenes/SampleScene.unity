@@ -3567,6 +3567,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JULIAN AURA ARP v1.1B Unity
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cf663bca3c1442b4eb6a8081a632f1b2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6117,6 +6121,8 @@ GameObject:
   - component: {fileID: 1270808678}
   - component: {fileID: 1270808677}
   - component: {fileID: 1270808680}
+  - component: {fileID: 1270808682}
+  - component: {fileID: 1270808681}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6228,6 +6234,7 @@ MonoBehaviour:
   moveInput: {fileID: -1550806645081448226, guid: bd3293daec76c80458799a9a00138192, type: 3}
   lookInput: {fileID: -810010864108975312, guid: bd3293daec76c80458799a9a00138192, type: 3}
   sprintInput: {fileID: -7593469263839297550, guid: bd3293daec76c80458799a9a00138192, type: 3}
+  isSprinting: 0
 --- !u!143 &1270808678
 CharacterController:
   m_ObjectHideFlags: 0
@@ -6272,7 +6279,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.35
   m_Height: 1.9999999
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -6303,6 +6310,134 @@ MonoBehaviour:
   bobReturnSpeed: 8
   bobRotationAmount: 1.5
   stabilizeWhenIdle: 1
+--- !u!82 &1270808681
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270808672}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1270808682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270808672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753eb32b7c5b33c4480986a0954861c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOWFPS_Footsteps
+  controller: {fileID: 1270808678}
+  fpsEngine: {fileID: 1270808677}
+  walkStepInterval: 0.6
+  sprintStepInterval: 0.35
+  surfaceFootsteps: []
+  defaultWalkSounds:
+  - {fileID: 8300000, guid: 28416955e1b17094cb105e52f693a05c, type: 3}
+  - {fileID: 8300000, guid: 388d998d8b08a024abb1440b617c7096, type: 3}
+  - {fileID: 8300000, guid: 4e1d49605b1690745915f6fbc23ccc7c, type: 3}
+  - {fileID: 8300000, guid: 0cdcabe1c9403bf409eedc57fc346a77, type: 3}
+  - {fileID: 8300000, guid: a47410186f2a0d04498f1de78b46ecf3, type: 3}
+  - {fileID: 8300000, guid: 86ab8bea0219b7b4bac200a9f4e76820, type: 3}
+  defaultSprintSounds:
+  - {fileID: 8300000, guid: 51d7b88f8d77bad43aefc6f00432dcb3, type: 3}
+  - {fileID: 8300000, guid: 21fc9084c88fb384cb8320a6aac8a287, type: 3}
+  - {fileID: 8300000, guid: 47e14865142d0ed49b9128ee5bf22d2b, type: 3}
+  - {fileID: 8300000, guid: d9304060601596f459c423c13db91129, type: 3}
+  - {fileID: 8300000, guid: bf1c57baba4cba047913a3a287bf8c2d, type: 3}
+  - {fileID: 8300000, guid: 1b3c910461252414c9bed9bee2dc659e, type: 3}
 --- !u!1 &1272938042
 GameObject:
   m_ObjectHideFlags: 0
