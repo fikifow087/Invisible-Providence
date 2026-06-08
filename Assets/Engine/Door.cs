@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.AI;
 
-// Memastikan objek pintu otomatis memiliki komponen AudioSource di Inspector
+// Memastikan objek pintu otomatis memiliki komponen AudioSource dan NavMeshObstacle di Inspector
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(NavMeshObstacle))]
 public class Door : MonoBehaviour
 {
     public bool isOpen = false;
@@ -17,6 +19,7 @@ public class Door : MonoBehaviour
     private Quaternion defaultRotation;
     private Quaternion openRotation;
     private AudioSource audioSource;
+    private NavMeshObstacle navMeshObstacle;
 
     void Start()
     {
@@ -31,6 +34,14 @@ public class Door : MonoBehaviour
         // Setup dasar AudioSource via code agar menjadi suara 3D yang realistis
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 1.0f; // 1.0 = Full 3D Sound (suara mengecil/membesar sesuai jarak Player)
+
+        // Mengambil komponen NavMeshObstacle untuk mengontrol blocking area musuh
+        navMeshObstacle = GetComponent<NavMeshObstacle>();
+        if (navMeshObstacle != null)
+        {
+            // Pintu dimulai dalam state tertutup, jadi obstacle harus enabled
+            navMeshObstacle.enabled = !isOpen;
+        }
     }
 
     void Update()
@@ -50,6 +61,12 @@ public class Door : MonoBehaviour
     public void ToggleDoor()
     {
         isOpen = !isOpen;
+
+        // Update NavMeshObstacle: disabled saat pintu terbuka, enabled saat pintu tertutup
+        if (navMeshObstacle != null)
+        {
+            navMeshObstacle.enabled = !isOpen;
+        }
 
         // Mainkan SFX yang sesuai dengan kondisi state pintu terbaru
         if (isOpen)
