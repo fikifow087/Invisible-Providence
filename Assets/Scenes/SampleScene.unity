@@ -1733,7 +1733,7 @@ NavMeshObstacle:
   m_Extents: {x: 0.002, y: 0.010000001, z: 0.005}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: 0, z: 0.005}
   m_TimeToStationary: 0.1
 --- !u!1 &166206813 stripped
