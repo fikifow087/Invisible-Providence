@@ -44,11 +44,50 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
     public float cameraLookSpeed = 15f;
     public float timeBeforeRestart = 2.5f;
 
-    void Start()
+    // --- VARIABEL UNTUK BLOCKING DIALOG ---
+    private bool isAIBlocked = false;
+
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    void Start()
+    {
         FindPlayerTarget();
         roamTimer = 0f; // Agar musuh langsung jalan saat game mulai
+    }
+
+    // --- DAFTARKAN EVENT LISTENER DI SINI ---
+    void OnEnable()
+    {
+        KIRISA_DialogueSystem.OnBlockPlayerInput += BlockAI;
+        KIRISA_DialogueSystem.OnUnblockPlayerInput += UnblockAI;
+    }
+
+    void OnDisable()
+    {
+        KIRISA_DialogueSystem.OnBlockPlayerInput -= BlockAI;
+        KIRISA_DialogueSystem.OnUnblockPlayerInput -= UnblockAI;
+    }
+
+    private void BlockAI()
+    {
+        isAIBlocked = true;
+        if (agent != null && agent.isActiveAndEnabled)
+        {
+            agent.isStopped = true;       // Rem paksa NavMeshAgent
+            agent.velocity = Vector3.zero; // Hilangkan momentum
+        }
+    }
+
+    private void UnblockAI()
+    {
+        isAIBlocked = false;
+        if (agent != null && agent.isActiveAndEnabled && !isPlayerDead)
+        {
+            agent.isStopped = false; // Lanjut bergerak
+        }
     }
 
     void FindPlayerTarget()
@@ -62,7 +101,8 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (isPlayerDead || playerTarget == null) return;
+        // JIKA DIALOG AKTIF ATAU PLAYER MATI, JANGAN LAKUKAN APA-APA
+        if (isPlayerDead || playerTarget == null || isAIBlocked) return;
 
         bool wasChasing = isChasing;
         
@@ -79,7 +119,6 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
         {
             if (wasChasing)
             {
-                // Jika baru saja kehilangan jejak, hapus rute lama dan diam sebentar untuk berpikir
                 agent.ResetPath();
                 roamTimer = roamWaitTime; 
             }
@@ -96,30 +135,25 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
 
     void CheckVision()
     {
-        // Hitung jarak murni ke player
         float distanceToPlayer = Vector3.Distance(transform.position, playerTarget.position);
 
         if (distanceToPlayer <= visionRange)
         {
-            // Hitung arah ke player (dengan offset tinggi ke area dada/kepala agar tidak nabrak lantai)
             Vector3 rayOrigin = transform.position + Vector3.up * 1.5f;
             Vector3 playerPos = playerTarget.position + Vector3.up * 1.5f;
             Vector3 directionToPlayer = (playerPos - rayOrigin).normalized;
 
-            // Cek apakah player masuk dalam sudut pandang (Vision Cone)
             float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
             if (angleToPlayer <= visionAngle / 2f)
             {
-                // Tembakkan Raycast. Jika TIDAK mengenai obstacleLayer, berarti player terlihat!
                 if (!Physics.Raycast(rayOrigin, directionToPlayer, distanceToPlayer, obstacleLayer))
                 {
                     isChasing = true;
-                    return; // Keluar dari fungsi agar isChasing tetap true
+                    return; 
                 }
             }
         }
         
-        // Jika kode sampai sini, berarti di luar jarak, di luar sudut, atau terhalang tembok
         isChasing = false;
     }
 
@@ -127,25 +161,22 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
     {
         agent.speed = walkSpeed;
 
-        // Jika musuh sudah sampai di tujuan (atau belum punya tujuan)
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             roamTimer -= Time.deltaTime;
 
             if (roamTimer <= 0f)
             {
-                // Cari titik acak di sekitar musuh
                 Vector3 randomDirection = Random.insideUnitSphere * roamRadius;
                 randomDirection += transform.position;
 
                 NavMeshHit hit;
-                // Pastikan titik acak tersebut ada di atas NavMesh yang valid
                 if (NavMesh.SamplePosition(randomDirection, out hit, roamRadius, 1))
                 {
                     agent.SetDestination(hit.position);
                 }
 
-                roamTimer = roamWaitTime; // Reset timer untuk tunggu di titik selanjutnya
+                roamTimer = roamWaitTime; 
             }
         }
     }
@@ -205,26 +236,18 @@ public class FIKIFOW_EnemyAI : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 
-    // ==========================================
-    // VISUALISASI DEBUG DI SCENE VIEW
-    // ==========================================
     void OnDrawGizmosSelected()
     {
-        // 1. Jangkauan Tangkapan (Merah)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, catchDistance);
 
-        // 2. Jangkauan Penglihatan (Kuning Transparan)
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
         Gizmos.DrawWireSphere(transform.position, visionRange);
 
-        // 3. Sudut Pandang Cone (Garis Biru)
         Vector3 forward = transform.forward;
-        // Kalkulasi rotasi sudut ke kiri dan ke kanan
         Vector3 leftBoundary = Quaternion.Euler(0, -visionAngle / 2f, 0) * forward;
         Vector3 rightBoundary = Quaternion.Euler(0, visionAngle / 2f, 0) * forward;
 
-        // Offset sedikit ke atas (area mata)
         Vector3 eyePos = transform.position + Vector3.up * 1.5f;
 
         Gizmos.color = Color.cyan;

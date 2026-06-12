@@ -19,12 +19,16 @@ public class EVT_ChapterFlow : MonoBehaviour
                 Debug.Log("Dialog Selesai");
             },
             new KirisaDialogLine(
+                mode: 2, 
+                duration: 3f,
                 speaker: "ARIAN", 
                 dialog: "......", 
                 portrait: "", 
                 voice: ""
             ),
             new KirisaDialogLine(
+                mode: 1, 
+                duration: 11.5f,
                 speaker: "ADRIAN", 
                 dialog: "Akhirnya sampai juga di rumah. Kuy lah waktunya gadang ", 
                 portrait: "", 

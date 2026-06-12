@@ -17341,6 +17341,23 @@ MonoBehaviour:
   skipButton: {fileID: 0}
   skipButtonText: {fileID: 0}
   skipButtonLabel: Skip
+  continueDialogAction:
+    m_Name: Continue Dialog
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5d160bd8-cd1a-41a4-af75-c9369b168626
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0c55265d-28de-47aa-b290-fde80b7c4adf
+      m_Path: <Mouse>/delta/left
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Continue Dialog
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &1993408656
 Transform:
   m_ObjectHideFlags: 0

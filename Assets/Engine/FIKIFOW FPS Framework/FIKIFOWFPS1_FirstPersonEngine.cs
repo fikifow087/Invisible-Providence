@@ -62,6 +62,9 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
     private float bobTimer = 0f; 
     private Vector3 currentBobOffset; 
 
+    // --- VARIABEL UNTUK BLOCKING DIALOG ---
+    private bool isInputBlocked = false;
+
     void Start()
     {
         controller = GetComponent<CharacterController>(); 
@@ -71,6 +74,9 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
 
     void Update()
     {
+        // JIKA DIALOG AKTIF, BERHENTI MENGEKSEKUSI PERGERAKAN
+        if (isInputBlocked) return; 
+
         HandleLook(); 
         HandleMovement(); 
         HandleCameraBobbing(); 
@@ -131,7 +137,6 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
             isSprinting = false; 
         }
 
-        // --- PERBAIKAN: Satukan Vektor Gerakan Mendatar & Gravitasi Vertikal ---
         Vector3 finalMotion = moveDirection * currentSpeed; 
 
         if (controller.isGrounded && velocity.y < 0) 
@@ -140,10 +145,8 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         }
         velocity.y += gravity * Time.deltaTime; 
         
-        // Satukan posisi Y ke dalam vektor finalMotion
         finalMotion.y = velocity.y; 
 
-        // Cukup panggil Move SATU KALI agar internal velocity Unity terbaca dengan benar
         controller.Move(finalMotion * Time.deltaTime); 
 
         if (animator != null) 
@@ -161,7 +164,6 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
             return; 
         }
 
-        // Menggunakan logika horizontal velocity agar lebih akurat
         Vector3 horizontalVel = new Vector3(controller.velocity.x, 0f, controller.velocity.z);
         bool isMoving = controller.isGrounded && horizontalVel.magnitude > 0.1f; 
 
@@ -188,11 +190,15 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         currentBobOffset = Vector3.Lerp(currentBobOffset, targetBobOffset, Time.deltaTime * bobReturnSpeed); 
     }
 
+    // --- DAFTARKAN EVENT LISTENER ---
     void OnEnable() 
     { 
         if (moveInput != null) moveInput.action.Enable();  
         if (lookInput != null) lookInput.action.Enable();  
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Enable();  
+
+        KIRISA_DialogueSystem.OnBlockPlayerInput += BlockInput;
+        KIRISA_DialogueSystem.OnUnblockPlayerInput += UnblockInput;
     } 
 
     void OnDisable() 
@@ -200,5 +206,35 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         if (moveInput != null) moveInput.action.Disable(); 
         if (lookInput != null) lookInput.action.Disable(); 
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Disable(); 
+
+        KIRISA_DialogueSystem.OnBlockPlayerInput -= BlockInput;
+        KIRISA_DialogueSystem.OnUnblockPlayerInput -= UnblockInput;
+    }
+
+    // --- PERBAIKAN DI LOGIKA BLOCK & UNBLOCK INPUT ---
+    private void BlockInput()
+    {
+        isInputBlocked = true;
+        currentInputVector = Vector2.zero; 
+        if (animator != null)
+        {
+            animator.SetFloat("MoveX", 0); 
+            animator.SetFloat("MoveY", 0);
+        }
+
+        // MEMATIKAN TOTAL INPUT DARI INSPECTOR SAAT MODE 1
+        if (moveInput != null && moveInput.action != null) moveInput.action.Disable();
+        if (lookInput != null && lookInput.action != null) lookInput.action.Disable();
+        if (sprintInput != null && sprintInput.action != null) sprintInput.action.Disable();
+    }
+
+    private void UnblockInput()
+    {
+        isInputBlocked = false;
+
+        // MENYALAKAN KEMBALI INPUT SAAT MODE 2 ATAU DIALOG SELESAI
+        if (moveInput != null && moveInput.action != null) moveInput.action.Enable();
+        if (lookInput != null && lookInput.action != null) lookInput.action.Enable();
+        if (sprintInput != null && sprintInput.action != null) sprintInput.action.Enable();
     }
 }
