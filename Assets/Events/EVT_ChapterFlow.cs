@@ -19,8 +19,8 @@ public class EVT_ChapterFlow : MonoBehaviour
                 Debug.Log("Dialog Selesai");
             },
             new KirisaDialogLine(
-                mode: 2, 
-                duration: 3f,
+                mode: 1, 
+                duration: 0f,
                 speaker: "ARIAN", 
                 dialog: "......", 
                 portrait: "", 
@@ -28,9 +28,49 @@ public class EVT_ChapterFlow : MonoBehaviour
             ),
             new KirisaDialogLine(
                 mode: 1, 
-                duration: 11.5f,
+                duration: 0f,
                 speaker: "ADRIAN", 
-                dialog: "Akhirnya sampai juga di rumah. Kuy lah waktunya gadang ", 
+                dialog: "Akhirnya sampai juga di rumah. Kuy lah waktunya gadang", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "Tinggal lanjut main game kemarin", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "Nanggung banget kalo ditinggal, udah mau tamat nih", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "(Suara perut keroncongan)", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "Gahh lapar banget...", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "Mending makan nasgor sambil nonton tv dah.", 
                 portrait: "", 
                 voice: ""
             )
