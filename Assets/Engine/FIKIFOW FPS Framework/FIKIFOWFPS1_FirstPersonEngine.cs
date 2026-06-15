@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
 {
+    // --- TAMBAHAN: SINGLETON UNTUK AKSES MUDAH DARI SCRIPT LAIN ---
+    public static FIKIFOWFPS1_FirstPersonEngine Instance;
+
     [Header("References")]
     public Transform cameraHolder; 
     public Transform headBone; 
@@ -62,8 +65,14 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
     private float bobTimer = 0f; 
     private Vector3 currentBobOffset; 
 
-    // --- VARIABEL UNTUK BLOCKING DIALOG ---
-    private bool isInputBlocked = false;
+    public bool isInputBlocked = false;
+
+    void Awake()
+    {
+        // Setup Singleton
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     void Start()
     {
@@ -74,7 +83,6 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
 
     void Update()
     {
-        // JIKA DIALOG AKTIF, BERHENTI MENGEKSEKUSI PERGERAKAN
         if (isInputBlocked) return; 
 
         HandleLook(); 
@@ -84,6 +92,8 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
 
     void LateUpdate()
     {
+        if (isInputBlocked) return; // Mencegah spine bone berputar aneh saat input freeze
+
         if (spineBone != null) 
         {
             spineBone.localRotation = Quaternion.Euler(xRotation, 0f, 0f); 
@@ -190,13 +200,13 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         currentBobOffset = Vector3.Lerp(currentBobOffset, targetBobOffset, Time.deltaTime * bobReturnSpeed); 
     }
 
-    // --- DAFTARKAN EVENT LISTENER ---
     void OnEnable() 
     { 
         if (moveInput != null) moveInput.action.Enable();  
         if (lookInput != null) lookInput.action.Enable();  
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Enable();  
 
+        // Masih mendengarkan dialogue system secara otomatis
         KIRISA_DialogueSystem.OnBlockPlayerInput += BlockInput;
         KIRISA_DialogueSystem.OnUnblockPlayerInput += UnblockInput;
     } 
@@ -211,8 +221,8 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         KIRISA_DialogueSystem.OnUnblockPlayerInput -= UnblockInput;
     }
 
-    // --- PERBAIKAN DI LOGIKA BLOCK & UNBLOCK INPUT ---
-    private void BlockInput()
+    // --- SEKARANG MENJADI PUBLIC AGAR BISA DIPANGGIL SCRIPT LAIN ---
+    public void BlockInput()
     {
         isInputBlocked = true;
         currentInputVector = Vector2.zero; 
@@ -222,17 +232,15 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
             animator.SetFloat("MoveY", 0);
         }
 
-        // MEMATIKAN TOTAL INPUT DARI INSPECTOR SAAT MODE 1
         if (moveInput != null && moveInput.action != null) moveInput.action.Disable();
         if (lookInput != null && lookInput.action != null) lookInput.action.Disable();
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Disable();
     }
 
-    private void UnblockInput()
+    public void UnblockInput()
     {
         isInputBlocked = false;
 
-        // MENYALAKAN KEMBALI INPUT SAAT MODE 2 ATAU DIALOG SELESAI
         if (moveInput != null && moveInput.action != null) moveInput.action.Enable();
         if (lookInput != null && lookInput.action != null) lookInput.action.Enable();
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Enable();

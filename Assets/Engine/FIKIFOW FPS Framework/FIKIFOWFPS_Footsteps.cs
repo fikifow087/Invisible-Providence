@@ -49,11 +49,11 @@ public class FIKIFOWFPS_Footsteps : MonoBehaviour
     {
         if (controller == null) return;
 
-        // --- PERBAIKAN BUG: HENTIKAN SUARA JIKA DIALOG MODE 1 AKTIF ---
-        if (KIRISA_DialogueSystem.IsPlayerInputBlocked)
+        // --- PERBAIKAN BUG UTAMA: HENTIKAN SUARA JIKA INPUT SEDANG DI-BLOCK (DIALOG, BACA BUKU, DLL) ---
+        if (KIRISA_DialogueSystem.IsPlayerInputBlocked || (fpsEngine != null && fpsEngine.isInputBlocked))
         {
-            footstepTimer = 0f; // Reset timer
-            return; // Berhenti mengeksekusi sisa kode di bawah
+            footstepTimer = 0f; // Reset timer ke 0 agar tidak menyimpan sisa ketukan tempo
+            return; // Berhenti mengeksekusi sisa kode langkah kaki di bawah
         }
 
         // Hitung hanya kecepatan horizontal (X dan Z), abaikan getaran Y agar stabil
