@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[AddComponentMenu("FIKIFOW FPS/4 - Footsteps")]
+[AddComponentMenu("FIKIFOW FPS/4 - Footsteps Fixed")]
 [RequireComponent(typeof(AudioSource))]
 public class FIKIFOWFPS_Footsteps : MonoBehaviour
 {
@@ -49,7 +49,14 @@ public class FIKIFOWFPS_Footsteps : MonoBehaviour
     {
         if (controller == null) return;
 
-        // PERBAIKAN 1: Hitung hanya kecepatan horizontal (X dan Z), abaikan getaran Y agar stabil
+        // --- PERBAIKAN BUG: HENTIKAN SUARA JIKA DIALOG MODE 1 AKTIF ---
+        if (KIRISA_DialogueSystem.IsPlayerInputBlocked)
+        {
+            footstepTimer = 0f; // Reset timer
+            return; // Berhenti mengeksekusi sisa kode di bawah
+        }
+
+        // Hitung hanya kecepatan horizontal (X dan Z), abaikan getaran Y agar stabil
         Vector3 horizontalVelocity = new Vector3(controller.velocity.x, 0f, controller.velocity.z);
         bool isMoving = controller.isGrounded && horizontalVelocity.magnitude > 0.1f;
 
@@ -75,7 +82,7 @@ public class FIKIFOWFPS_Footsteps : MonoBehaviour
         string currentSurfaceTag = "Default";
         RaycastHit hit;
 
-        // PERBAIKAN 2: Tembakkan Raycast dari posisi bawah pusat CharacterController (bukan transform objek Kamera)
+        // Tembakkan Raycast dari posisi bawah pusat CharacterController
         Vector3 rayOrigin = controller.transform.position; 
 
         if (Physics.Raycast(rayOrigin + Vector3.up * 0.2f, Vector3.down, out hit, 1.5f))

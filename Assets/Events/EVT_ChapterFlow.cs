@@ -70,7 +70,7 @@ public class EVT_ChapterFlow : MonoBehaviour
                 mode: 1, 
                 duration: 0f,
                 speaker: "ADRIAN", 
-                dialog: "Mending makan nasgor sambil nonton tv dah.", 
+                dialog: "Mending makan sambil nonton tv dah.", 
                 portrait: "", 
                 voice: ""
             )

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[AddComponentMenu("FIKIFOW FPS - Enemy Footsteps")]
+[AddComponentMenu("FIKIFOW FPS - Enemy Footsteps Fixed")]
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class FIKIFOW_EnemyFootsteps : MonoBehaviour
@@ -52,6 +52,13 @@ public class FIKIFOW_EnemyFootsteps : MonoBehaviour
     void Update()
     {
         if (agent == null) return;
+
+        // --- PERBAIKAN BUG: HENTIKAN SUARA JIKA DIALOG MODE 1 AKTIF ---
+        if (KIRISA_DialogueSystem.IsPlayerInputBlocked)
+        {
+            footstepTimer = 0f; // Reset timer
+            return; // Berhenti mengeksekusi sisa kode di bawah
+        }
 
         // Cek kecepatan musuh secara mendatar
         Vector3 horizontalVelocity = new Vector3(agent.velocity.x, 0f, agent.velocity.z);
