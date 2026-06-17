@@ -153,7 +153,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         if (currentFilterIndex == 0)
             filterClueText.text = "FILTER: " + filterNames[currentFilterIndex];
         else
-            filterClueText.text = "<color=yellow>[FILTER AKTIF: HANYA " + filterNames[currentFilterIndex] + "]</color>";
+            filterClueText.text = "<color=yellow>FILTER: " + filterNames[currentFilterIndex] + "</color>";
 
         capacityText.text = "KAPASITAS: " + itemsInInventory.Count + " / " + maxCapacity;
 
