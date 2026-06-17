@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem; // Murni menggunakan New Input System
+using UnityEngine.InputSystem; // Menggunakan New Input System Unity 6
 using TMPro;
 
 public class FIKIFOW_InventoryManager : MonoBehaviour
@@ -22,8 +22,12 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
 
     [Header("UI Canvas Panels")]
     [SerializeField] private GameObject inventoryPanel; 
-    [SerializeField] private Transform itemContainer;    
-    [SerializeField] private GameObject textButtonPrefab; 
+    [SerializeField] private Transform itemContainer;    // Tempat scroll view list item
+    [SerializeField] private GameObject textButtonPrefab; // Prefab tombol list item
+    
+    [Header("UI Popup Action Settings")]
+    [SerializeField] private GameObject actionPopupPanel; // GameObject Panel Popup Kecil
+    [SerializeField] private Button unequipButton;        // Referensi tombol Lepas di dalam Popup
 
     [Header("UI Text Displays (TextMeshPro)")]
     [SerializeField] private TextMeshProUGUI capacityText;
@@ -32,18 +36,15 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rightSlotText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    [Header("Input Actions Unity 6 (Modern)")]
-    [Tooltip("Input Action untuk membuka/tutup inventory (Misal: TAB)")]
+    [Header("Input Actions Unity 6")]
     [SerializeField] private InputActionReference toggleInventoryInput;
-    
-    [Tooltip("Input Action untuk mengganti filter kategori saat inventory terbuka (Misal: Q)")]
-    [SerializeField] private InputActionReference switchFilterInput; // PERBAIKAN: Input Action Baru
+    [SerializeField] private InputActionReference switchFilterInput; 
 
-    // Track status barang di tangan
+    // Status tracking item di tangan
     private FIKIFOW_ImportantItem equippedLeft = null;
     private FIKIFOW_ImportantItem equippedRight = null;
     
-    // Filter status
+    // Filter & Selection
     private int currentFilterIndex = 0; // 0: ALL, 1: UNKNOWN, 2: KEY, 3: DOCUMENT
     private FIKIFOW_ImportantItem selectedItem = null;
 
@@ -56,50 +57,33 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     void Start()
     {
         inventoryPanel.SetActive(false);
+        if (actionPopupPanel != null) actionPopupPanel.SetActive(false);
         UpdateHandSlotsUI();
     }
 
     void Update()
     {
-        // 1. Cek Input Buka/Tutup Tas (TAB)
         if (toggleInventoryInput != null && toggleInventoryInput.action.WasPressedThisFrame())
         {
             ToggleInventory();
         }
 
-        // 2. PERBAIKAN: Cek Input Ganti Filter menggunakan New Input System (Q)
         if (inventoryPanel.activeSelf && switchFilterInput != null && switchFilterInput.action.WasPressedThisFrame())
         {
             SwitchFilter();
         }
     }
 
-    // Aktifkan seluruh aksi input saat objek aktif
     void OnEnable()
     {
-        if (toggleInventoryInput != null && toggleInventoryInput.action != null)
-        {
-            toggleInventoryInput.action.Enable();
-        }
-
-        if (switchFilterInput != null && switchFilterInput.action != null)
-        {
-            switchFilterInput.action.Enable();
-        }
+        if (toggleInventoryInput != null && toggleInventoryInput.action != null) toggleInventoryInput.action.Enable();
+        if (switchFilterInput != null && switchFilterInput.action != null) switchFilterInput.action.Enable();
     }
 
-    // Matikan seluruh aksi input saat objek tidak aktif (Mencegah Memory Leak)
     void OnDisable()
     {
-        if (toggleInventoryInput != null && toggleInventoryInput.action != null)
-        {
-            toggleInventoryInput.action.Disable();
-        }
-
-        if (switchFilterInput != null && switchFilterInput.action != null)
-        {
-            switchFilterInput.action.Disable();
-        }
+        if (toggleInventoryInput != null && toggleInventoryInput.action != null) toggleInventoryInput.action.Disable();
+        if (switchFilterInput != null && switchFilterInput.action != null) switchFilterInput.action.Disable();
     }
 
     public bool AddToInventory(FIKIFOW_ImportantItem item)
@@ -113,6 +97,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         itemsInInventory.Add(item);
         item.gameObject.SetActive(false); 
 
+        // Auto-equip bawaan saat pertama kali memungut jika tangan kosong
         if (hasRightArm && equippedRight == null) EquipItem(item, true);
         else if (hasLeftArm && equippedLeft == null) EquipItem(item, false);
 
@@ -129,6 +114,8 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             FIKIFOWFPS1_FirstPersonEngine.Instance.BlockInput();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            
+            if (actionPopupPanel != null) actionPopupPanel.SetActive(false); // Reset popup saat buka
             RefreshInventoryUI();
         }
         else
@@ -142,21 +129,25 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     private void SwitchFilter()
     {
         currentFilterIndex = (currentFilterIndex + 1) % 4;
+        if (actionPopupPanel != null) actionPopupPanel.SetActive(false); // Tutup popup jika ganti filter
         RefreshInventoryUI();
     }
 
     public void RefreshInventoryUI()
     {
-        foreach (Transform child in itemContainer) Destroy(child.gameObject);
+        if (itemContainer == null || textButtonPrefab == null) return;
+
+        // Bersihkan UI lama
+        for (int i = itemContainer.childCount - 1; i >= 0; i--)
+        {
+            Destroy(itemContainer.GetChild(i).gameObject);
+        }
 
         string[] filterNames = { "SEMUA ITEM", "UNKNOWN", "KEY", "DOCUMENT" };
-        if (currentFilterIndex == 0)
-            filterClueText.text = "FILTER: " + filterNames[currentFilterIndex];
-        else
-            filterClueText.text = "<color=yellow>FILTER: " + filterNames[currentFilterIndex] + "</color>";
-
+        filterClueText.text = currentFilterIndex == 0 ? "FILTER: " + filterNames[currentFilterIndex] : "<color=yellow>[FILTER AKTIF: " + filterNames[currentFilterIndex] + "]</color>";
         capacityText.text = "KAPASITAS: " + itemsInInventory.Count + " / " + maxCapacity;
 
+        // Buat daftar list item sesuai filter
         foreach (var item in itemsInInventory)
         {
             if (currentFilterIndex > 0 && (int)item.kategori != (currentFilterIndex - 1)) 
@@ -165,67 +156,116 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             GameObject btn = Instantiate(textButtonPrefab, itemContainer);
             TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
             
-            if (item == equippedLeft) btnText.text = "[Kiri] " + item.namaItem;
-            else if (item == equippedRight) btnText.text = "[Kanan] " + item.namaItem;
+            // Berikan status teks visual di daftar tas
+            if (item == equippedLeft) btnText.text = "<color=#3498db>[Kiri]</color> " + item.namaItem;
+            else if (item == equippedRight) btnText.text = "<color=#2ecc71>[Kanan]</color> " + item.namaItem;
             else btnText.text = item.namaItem;
 
-            btn.GetComponent<Button>().onClick.AddListener(() => SelectItem(item));
+            btn.GetComponent<Button>().onClick.AddListener(() => OpenActionPopup(item));
         }
     }
 
     private void UpdateHandSlotsUI()
     {
-        if (!hasLeftArm)
-        {
-            leftSlotText.text = "<color=red>[SLOT KIRI: CACAT/AMPUTASI]</color>";
-        }
-        else
-        {
-            leftSlotText.text = "TANGAN KIRI: " + (equippedLeft != null ? equippedLeft.namaItem : "(Kosong)");
-        }
+        if (!hasLeftArm) leftSlotText.text = "<color=red>[SLOT KIRI: CACAT]</color>";
+        else leftSlotText.text = "TANGAN KIRI:\n" + (equippedLeft != null ? "<color=#3498db>" + equippedLeft.namaItem + "</color>" : "(Kosong)");
 
-        if (!hasRightArm)
-        {
-            rightSlotText.text = "<color=red>[SLOT KANAN: CACAT/AMPUTASI]</color>";
-        }
-        else
-        {
-            rightSlotText.text = "TANGAN KANAN: " + (equippedRight != null ? equippedRight.namaItem : "(Kosong)");
-        }
+        if (!hasRightArm) rightSlotText.text = "<color=red>[SLOT KANAN: CACAT]</color>";
+        else rightSlotText.text = "TANGAN KANAN:\n" + (equippedRight != null ? "<color=#2ecc71>" + equippedRight.namaItem + "</color>" : "(Kosong)");
     }
 
-    private void SelectItem(FIKIFOW_ImportantItem item)
+    // --- SISTEM POPUP BARU ---
+    private void OpenActionPopup(FIKIFOW_ImportantItem item)
     {
         selectedItem = item;
         descriptionText.text = "<b>" + item.namaItem + "</b>\nKategori: " + item.kategori.ToString() + "\n\n" + item.deskripsiItem;
+
+        if (actionPopupPanel != null)
+        {
+            actionPopupPanel.SetActive(true);
+
+            // Cek apakah item ini sedang di-equip atau tidak untuk menentukan aktifnya tombol unequip
+            if (unequipButton != null)
+            {
+                bool isCurrentlyEquipped = (item == equippedLeft || item == equippedRight);
+                unequipButton.gameObject.SetActive(isCurrentlyEquipped); // Hanya muncul jika barang sedang dipegang
+            }
+        }
     }
 
-    public void ClickEquipLeft()
+    public void CloseActionPopup()
+    {
+        if (actionPopupPanel != null) actionPopupPanel.SetActive(false);
+    }
+
+    // --- METODE AKSI UNTUK TOMBOL DI DALAM POPUP ---
+
+    // Hubungkan ini ke OnClick() Tombol "Equip Kiri" di dalam Panel Popup
+    public void ClickActionEquipLeft()
     {
         if (!hasLeftArm || selectedItem == null) return;
         EquipItem(selectedItem, false);
+        CloseActionPopup();
     }
 
-    public void ClickEquipRight()
+    // Hubungkan ini ke OnClick() Tombol "Equip Kanan" di dalam Panel Popup
+    public void ClickActionEquipRight()
     {
         if (!hasRightArm || selectedItem == null) return;
         EquipItem(selectedItem, true);
+        CloseActionPopup();
     }
 
+    // Hubungkan ini ke OnClick() Tombol "Unequip / Lepas" di dalam Panel Popup
+    public void ClickActionUnequip()
+    {
+        if (selectedItem == null) return;
+
+        if (equippedLeft == selectedItem)
+        {
+            selectedItem.gameObject.SetActive(false);
+            equippedLeft = null;
+        }
+        else if (equippedRight == selectedItem)
+        {
+            selectedItem.gameObject.SetActive(false);
+            equippedRight = null;
+        }
+
+        CloseActionPopup();
+        UpdateHandSlotsUI();
+        RefreshInventoryUI();
+    }
+
+    // --- INTI LOGIKA EQUIP & REPLACEMENT ---
     private void EquipItem(FIKIFOW_ImportantItem item, bool isRightHand)
     {
         if (isRightHand)
         {
-            if (equippedLeft == item) equippedLeft = null; 
-            if (equippedRight != null) equippedRight.gameObject.SetActive(false);
+            // Jika item ini ternyata sedang dipegang di tangan kiri, kosongkan dulu tangan kiri
+            if (equippedLeft == item) equippedLeft = null;
+
+            // --- LOGIKA REPLACE KANAN ---
+            // Jika tangan kanan memegang barang LAIN, sembunyikan barang lama tersebut ke tas kembali
+            if (equippedRight != null && equippedRight != item)
+            {
+                equippedRight.gameObject.SetActive(false);
+            }
             
             equippedRight = item;
             AttachToHolder(item, itemHoldPointR);
         }
         else
         {
-            if (equippedRight == item) equippedRight = null; 
-            if (equippedLeft != null) equippedLeft.gameObject.SetActive(false);
+            // Jika item ini ternyata sedang dipegang di tangan kanan, kosongkan dulu tangan kanan
+            if (equippedRight == item) equippedRight = null;
+
+            // --- LOGIKA REPLACE KIRI ---
+            // Jika tangan kiri memegang barang LAIN, sembunyikan barang lama tersebut ke tas kembali
+            if (equippedLeft != null && equippedLeft != item)
+            {
+                equippedLeft.gameObject.SetActive(false);
+            }
 
             equippedLeft = item;
             AttachToHolder(item, itemHoldPointL);
