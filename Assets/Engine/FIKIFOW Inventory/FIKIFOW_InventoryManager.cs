@@ -15,6 +15,10 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     [Header("Hand Holders (Transforms Near Camera)")]
     public Transform itemHoldPointL;
     public Transform itemHoldPointR;
+    
+    [Header("Drop Settings")]
+    [Tooltip("Titik referensi jatuhnya barang (Misal: Kosongkan GameObject di depan kamera pemain)")]
+    public Transform dropPoint;
 
     [Header("Inventory Settings")]
     public int maxCapacity = 6;
@@ -22,12 +26,12 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
 
     [Header("UI Canvas Panels")]
     [SerializeField] private GameObject inventoryPanel; 
-    [SerializeField] private Transform itemContainer;    // Tempat scroll view list item
-    [SerializeField] private GameObject textButtonPrefab; // Prefab tombol list item
+    [SerializeField] private Transform itemContainer;    
+    [SerializeField] private GameObject textButtonPrefab; 
     
     [Header("UI Popup Action Settings")]
-    [SerializeField] private GameObject actionPopupPanel; // GameObject Panel Popup Kecil
-    [SerializeField] private Button unequipButton;        // Referensi tombol Lepas di dalam Popup
+    [SerializeField] private GameObject actionPopupPanel; 
+    [SerializeField] private Button unequipButton;        
 
     [Header("UI Text Displays (TextMeshPro)")]
     [SerializeField] private TextMeshProUGUI capacityText;
@@ -45,7 +49,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     private FIKIFOW_ImportantItem equippedRight = null;
     
     // Filter & Selection
-    private int currentFilterIndex = 0; // 0: ALL, 1: UNKNOWN, 2: KEY, 3: DOCUMENT
+    private int currentFilterIndex = 0; 
     private FIKIFOW_ImportantItem selectedItem = null;
 
     void Awake()
@@ -97,7 +101,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         itemsInInventory.Add(item);
         item.gameObject.SetActive(false); 
 
-        // Auto-equip bawaan saat pertama kali memungut jika tangan kosong
         if (hasRightArm && equippedRight == null) EquipItem(item, true);
         else if (hasLeftArm && equippedLeft == null) EquipItem(item, false);
 
@@ -115,7 +118,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             
-            if (actionPopupPanel != null) actionPopupPanel.SetActive(false); // Reset popup saat buka
+            if (actionPopupPanel != null) actionPopupPanel.SetActive(false); 
             RefreshInventoryUI();
         }
         else
@@ -129,7 +132,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     private void SwitchFilter()
     {
         currentFilterIndex = (currentFilterIndex + 1) % 4;
-        if (actionPopupPanel != null) actionPopupPanel.SetActive(false); // Tutup popup jika ganti filter
+        if (actionPopupPanel != null) actionPopupPanel.SetActive(false); 
         RefreshInventoryUI();
     }
 
@@ -137,7 +140,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
     {
         if (itemContainer == null || textButtonPrefab == null) return;
 
-        // Bersihkan UI lama
         for (int i = itemContainer.childCount - 1; i >= 0; i--)
         {
             Destroy(itemContainer.GetChild(i).gameObject);
@@ -147,7 +149,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         filterClueText.text = currentFilterIndex == 0 ? "FILTER: " + filterNames[currentFilterIndex] : "<color=yellow>[FILTER AKTIF: " + filterNames[currentFilterIndex] + "]</color>";
         capacityText.text = "KAPASITAS: " + itemsInInventory.Count + " / " + maxCapacity;
 
-        // Buat daftar list item sesuai filter
         foreach (var item in itemsInInventory)
         {
             if (currentFilterIndex > 0 && (int)item.kategori != (currentFilterIndex - 1)) 
@@ -156,7 +157,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             GameObject btn = Instantiate(textButtonPrefab, itemContainer);
             TextMeshProUGUI btnText = btn.GetComponentInChildren<TextMeshProUGUI>();
             
-            // Berikan status teks visual di daftar tas
             if (item == equippedLeft) btnText.text = "<color=#3498db>[Kiri]</color> " + item.namaItem;
             else if (item == equippedRight) btnText.text = "<color=#2ecc71>[Kanan]</color> " + item.namaItem;
             else btnText.text = item.namaItem;
@@ -174,7 +174,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         else rightSlotText.text = "TANGAN KANAN:\n" + (equippedRight != null ? "<color=#2ecc71>" + equippedRight.namaItem + "</color>" : "(Kosong)");
     }
 
-    // --- SISTEM POPUP BARU ---
     private void OpenActionPopup(FIKIFOW_ImportantItem item)
     {
         selectedItem = item;
@@ -184,11 +183,10 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         {
             actionPopupPanel.SetActive(true);
 
-            // Cek apakah item ini sedang di-equip atau tidak untuk menentukan aktifnya tombol unequip
             if (unequipButton != null)
             {
                 bool isCurrentlyEquipped = (item == equippedLeft || item == equippedRight);
-                unequipButton.gameObject.SetActive(isCurrentlyEquipped); // Hanya muncul jika barang sedang dipegang
+                unequipButton.gameObject.SetActive(isCurrentlyEquipped); 
             }
         }
     }
@@ -198,9 +196,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         if (actionPopupPanel != null) actionPopupPanel.SetActive(false);
     }
 
-    // --- METODE AKSI UNTUK TOMBOL DI DALAM POPUP ---
-
-    // Hubungkan ini ke OnClick() Tombol "Equip Kiri" di dalam Panel Popup
     public void ClickActionEquipLeft()
     {
         if (!hasLeftArm || selectedItem == null) return;
@@ -208,7 +203,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         CloseActionPopup();
     }
 
-    // Hubungkan ini ke OnClick() Tombol "Equip Kanan" di dalam Panel Popup
     public void ClickActionEquipRight()
     {
         if (!hasRightArm || selectedItem == null) return;
@@ -216,7 +210,6 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         CloseActionPopup();
     }
 
-    // Hubungkan ini ke OnClick() Tombol "Unequip / Lepas" di dalam Panel Popup
     public void ClickActionUnequip()
     {
         if (selectedItem == null) return;
@@ -237,16 +230,54 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         RefreshInventoryUI();
     }
 
-    // --- INTI LOGIKA EQUIP & REPLACEMENT ---
+    // --- FITUR BARU: DROP BARANG ---
+    public void ClickActionDrop()
+    {
+        if (selectedItem == null) return;
+
+        // 1. Lepas dari tangan jika sedang dipegang
+        if (equippedLeft == selectedItem) equippedLeft = null;
+        if (equippedRight == selectedItem) equippedRight = null;
+
+        // 2. Hapus dari list inventory sistem
+        itemsInInventory.Remove(selectedItem);
+
+        // 3. Keluarkan ke dunia nyata (Unparent)
+        selectedItem.transform.SetParent(null); 
+        
+        // Posisikan barang ke titik jatuh (jika drop point tidak di-set, otomatis jatuh di sekitar tangan kanan)
+        if (dropPoint != null) 
+            selectedItem.transform.position = dropPoint.position;
+        else if (itemHoldPointR != null) 
+            selectedItem.transform.position = itemHoldPointR.position;
+
+        selectedItem.gameObject.SetActive(true); 
+
+        // 4. Pastikan Rigidbody berjalan (agar terkena gravitasi dan jatuh ke lantai)
+        Rigidbody rb = selectedItem.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false; 
+            
+            // Opsional: Berikan sedikit dorongan ke depan saat di-drop agar tidak mengenai kaki player
+            if (Camera.main != null)
+            {
+                rb.AddForce(Camera.main.transform.forward * 2f, ForceMode.Impulse);
+            }
+        }
+
+        selectedItem = null;
+        CloseActionPopup();
+        UpdateHandSlotsUI();
+        RefreshInventoryUI();
+    }
+
     private void EquipItem(FIKIFOW_ImportantItem item, bool isRightHand)
     {
         if (isRightHand)
         {
-            // Jika item ini ternyata sedang dipegang di tangan kiri, kosongkan dulu tangan kiri
             if (equippedLeft == item) equippedLeft = null;
 
-            // --- LOGIKA REPLACE KANAN ---
-            // Jika tangan kanan memegang barang LAIN, sembunyikan barang lama tersebut ke tas kembali
             if (equippedRight != null && equippedRight != item)
             {
                 equippedRight.gameObject.SetActive(false);
@@ -257,11 +288,8 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         }
         else
         {
-            // Jika item ini ternyata sedang dipegang di tangan kanan, kosongkan dulu tangan kanan
             if (equippedRight == item) equippedRight = null;
 
-            // --- LOGIKA REPLACE KIRI ---
-            // Jika tangan kiri memegang barang LAIN, sembunyikan barang lama tersebut ke tas kembali
             if (equippedLeft != null && equippedLeft != item)
             {
                 equippedLeft.gameObject.SetActive(false);
@@ -285,6 +313,10 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         {
             item.transform.localPosition = Vector3.zero;
             item.transform.localRotation = Quaternion.identity;
+            
+            // Saat dipegang, pastikan Rigidbody dimatikan agar tidak jatuh dari tangan
+            Rigidbody rb = item.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
         }
     }
 }
