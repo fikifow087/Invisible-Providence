@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem; // Menggunakan New Input System Unity 6
+using UnityEngine.InputSystem; 
 using TMPro;
 
 public class FIKIFOW_InventoryManager : MonoBehaviour
@@ -230,7 +230,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         RefreshInventoryUI();
     }
 
-    // --- FITUR BARU: DROP BARANG ---
+    // --- FITUR BARU: DROP BARANG (DENGAN FIX COLLIDER) ---
     public void ClickActionDrop()
     {
         if (selectedItem == null) return;
@@ -245,7 +245,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         // 3. Keluarkan ke dunia nyata (Unparent)
         selectedItem.transform.SetParent(null); 
         
-        // Posisikan barang ke titik jatuh (jika drop point tidak di-set, otomatis jatuh di sekitar tangan kanan)
+        // Posisikan barang ke titik jatuh
         if (dropPoint != null) 
             selectedItem.transform.position = dropPoint.position;
         else if (itemHoldPointR != null) 
@@ -253,13 +253,20 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
 
         selectedItem.gameObject.SetActive(true); 
 
+        // --- PERBAIKAN BUG: NYALAKAN KEMBALI COLLIDER ---
+        Collider col = selectedItem.GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = true; // Agar objek bisa berbenturan dengan lantai/tanah
+        }
+
         // 4. Pastikan Rigidbody berjalan (agar terkena gravitasi dan jatuh ke lantai)
         Rigidbody rb = selectedItem.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = false; 
             
-            // Opsional: Berikan sedikit dorongan ke depan saat di-drop agar tidak mengenai kaki player
+            // Berikan sedikit dorongan ke depan saat di-drop agar tidak mengenai kaki player
             if (Camera.main != null)
             {
                 rb.AddForce(Camera.main.transform.forward * 2f, ForceMode.Impulse);
