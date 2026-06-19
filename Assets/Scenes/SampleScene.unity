@@ -4637,17 +4637,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 433716985}
+      addedObject: {fileID: 940593256}
+    m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 433716987}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 433716986}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 433716985}
   m_SourcePrefab: {fileID: 100100000, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
 --- !u!4 &433716983 stripped
 Transform:
@@ -5778,7 +5781,7 @@ Transform:
   m_GameObject: {fileID: 567338918}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.714, y: 0.66, z: 17.556}
+  m_LocalPosition: {x: 3.06, y: 0.66, z: 17.556}
   m_LocalScale: {x: 3.62, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8938,6 +8941,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 925431543}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &940593255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 940593256}
+  m_Layer: 9
+  m_Name: EndPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &940593256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940593255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.01, y: 0, z: 9.63}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 433716983}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &942775524 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -106172556343991183, guid: 6daf98112d3e9c442a44d6b0e77d0668, type: 3}
@@ -10643,6 +10677,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: e56c88810b9604248bcdf20146bf57e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1121885228}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: e56c88810b9604248bcdf20146bf57e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1121885229}
   m_SourcePrefab: {fileID: 100100000, guid: e56c88810b9604248bcdf20146bf57e7, type: 3}
 --- !u!4 &1121885227 stripped
 Transform:
@@ -10670,6 +10707,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4748924, z: 1.1023417}
   m_Center: {x: 0, y: 0.73744625, z: 0}
+--- !u!114 &1121885229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511127564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d11c33a706d60d4d98244f505a336e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_Interactable
+  promptBiasa: Tekan E untuk Berinteraksi
+  butuhItemSpesifik: 1
+  itemDibutuhkan: {fileID: 433716985}
+  namaItemTerdeteksi: Pizza
+  promptJikaBawaItem: <color=#2ecc71>Tekan E untuk Gunakan Item</color>
+  promptJikaTidakBawaItem: <color=red>Butuh Item Spesifik</color>
+  lepasItemDariTangan: 1
+  titikPenempatanItem: {fileID: 940593256}
+  OnInteractSuccess:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1125933905
 GameObject:
   m_ObjectHideFlags: 0
@@ -11928,15 +11988,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.9
+      value: -1.956
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.24
+      value: 0.544
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.5
+      value: 15.19
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f5c9f190eeef14fbda9f38b1441ecd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15894,7 +15954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd71c41ba0fa2c647a25116fb6b7c392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  interactionDistance: 3
+  interactionDistance: 1
   interactableLayer:
     serializedVersion: 2
     m_Bits: 0

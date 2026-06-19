@@ -326,4 +326,56 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             if (rb != null) rb.isKinematic = true;
         }
     }
+
+    // ==========================================
+    // SEBAGAI SYARAT INTEGRASI SISTEM INTERAKSI UNIVERSAL
+    // ==========================================
+    
+    public bool ApakahItemSedangDipegang(string namaItem)
+    {
+        bool diKiri = (equippedLeft != null && equippedLeft.namaItem == namaItem);
+        bool diKanan = (equippedRight != null && equippedRight.namaItem == namaItem);
+        return diKiri || diKanan;
+    }
+
+    public bool TaruhItemDariTangan(string namaItemYangDicari, Vector3 posisiTarget, Quaternion rotasiTarget, Transform parentBaru = null)
+    {
+        FIKIFOW_ImportantItem itemDitemukan = null;
+
+        if (equippedLeft != null && equippedLeft.namaItem == namaItemYangDicari)
+        {
+            itemDitemukan = equippedLeft;
+            equippedLeft = null;
+        }
+        else if (equippedRight != null && equippedRight.namaItem == namaItemYangDicari)
+        {
+            itemDitemukan = equippedRight;
+            equippedRight = null;
+        }
+
+        if (itemDitemukan != null)
+        {
+            if (itemsInInventory.Contains(itemDitemukan))
+            {
+                itemsInInventory.Remove(itemDitemukan);
+            }
+
+            itemDitemukan.transform.SetParent(parentBaru);
+            itemDitemukan.transform.position = posisiTarget;
+            itemDitemukan.transform.rotation = rotasiTarget;
+            itemDitemukan.gameObject.SetActive(true);
+
+            // Nyalakan kembali fisik dunia nyata agar objek diam rapi di target lokasi
+            Rigidbody rb = itemDitemukan.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+
+            Collider col = itemDitemukan.GetComponent<Collider>();
+            if (col != null) col.enabled = true;
+
+            UpdateHandSlotsUI();
+            RefreshInventoryUI();
+            return true;
+        }
+        return false;
+    }
 }

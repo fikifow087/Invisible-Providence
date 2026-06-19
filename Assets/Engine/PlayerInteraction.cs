@@ -46,44 +46,79 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (cam == null) return;
 
-        // Membuat Ray tepat dari titik tengah layar (Crosshair)
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         RaycastHit hit;
 
-        // Cek apakah kita menggunakan layer mask tertentu atau menembak semua objek
+        // Tembakkan raycast sesuai layer mask jika diatur
         bool hasHit = interactableLayer == 0 
             ? Physics.Raycast(ray, out hit, interactionDistance) 
             : Physics.Raycast(ray, out hit, interactionDistance, interactableLayer);
 
-        // Tembakkan raycast
         if (hasHit)
         {
-            // Cek apakah objek yang ditabrak memiliki Tag "Door"
+            // =====================================================================
+            // A. UTAMAKAN SISTEM BARU: Cek komponen universal FIKIFOW_Interactable
+            // =====================================================================
+            FIKIFOW_Interactable interactable = hit.collider.GetComponent<FIKIFOW_Interactable>();
+
+            if (interactable != null)
+            {
+                if (interactionText != null) interactionText.gameObject.SetActive(true);
+                bool bisaEksekusi = true;
+
+                // Jika objek butuh item spesifik dari slot tangan player
+                if (interactable.butuhItemSpesifik)
+                {
+                    if (FIKIFOW_InventoryManager.Instance != null && 
+                        FIKIFOW_InventoryManager.Instance.ApakahItemSedangDipegang(interactable.namaItemDibutuhkan))
+                    {
+                        if (interactionText != null) interactionText.text = interactable.promptJikaBawaItem;
+                    }
+                    else
+                    {
+                        if (interactionText != null) interactionText.text = interactable.promptJikaTidakBawaItem;
+                        bisaEksekusi = false; // Kunci interaksi karena syarat item belum terpenuhi
+                    }
+                }
+                else
+                {
+                    // Objek interaktif biasa (tanpa syarat item, misal: saklar tombol atau pintu biasa)
+                    if (interactionText != null) interactionText.text = interactable.promptBiasa;
+                }
+
+                // Eksekusi ketika tombol interaksi dipicu oleh pemain
+                if (bisaEksekusi && interactInput != null && interactInput.action != null && interactInput.action.triggered)
+                {
+                    interactable.Interact();
+                }
+                return; // Keluar dari fungsi agar teks tidak disembunyikan di bawah
+            }
+
+            // =====================================================================
+            // B. BACKUP CADANGAN: Tetap dukung sistem tag "Door" lama milikmu
+            // =====================================================================
             if (hit.collider.CompareTag("Door"))
             {
                 Door doorScript = hit.collider.GetComponent<Door>();
 
                 if (doorScript != null)
                 {
-                    // Tampilkan UI teks petunjuk
                     if (interactionText != null)
                     {
                         interactionText.gameObject.SetActive(true);
                         interactionText.text = doorScript.isOpen ? "Tekan E untuk Menutup" : "Tekan E untuk Membuka";
                     }
 
-                    // PENGGANTI INPUT LAMA: .triggered mendeteksi ketika tombol baru saja ditekan di frame ini
                     if (interactInput != null && interactInput.action != null && interactInput.action.triggered)
                     {
                         doorScript.ToggleDoor();
                     }
-                    
-                    return; // Keluar dari fungsi agar teks tidak langsung disembunyikan
+                    return; 
                 }
             }
         }
 
-        // Jika raycast tidak menabrak apa-apa atau bukan pintu, sembunyikan UI teks
+        // Jika raycast tidak mengenai apapun atau bukan objek interaktif, sembunyikan UI teks
         if (interactionText != null)
         {
             interactionText.gameObject.SetActive(false);
