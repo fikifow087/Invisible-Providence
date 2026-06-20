@@ -8674,6 +8674,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1610946275}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1610946279}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1610946278}
   m_SourcePrefab: {fileID: 100100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
 --- !u!4 &891771139 stripped
 Transform:
@@ -16725,6 +16731,60 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.0607812, z: 1.0875883}
   m_Center: {x: 0, y: 1.0303909, z: 0}
+--- !u!114 &1610946278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610946274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12a52ba6270db0478429f04d92a9bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_LootBox
+  prefabItemLoot: {fileID: 90365382}
+  sudahDiLoot: 0
+  teksSetelahKosong: Kosong
+  matikanInteraksiSetelahLoot: 0
+  OnLootSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1610946279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610946274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d11c33a706d60d4d98244f505a336e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_Interactable
+  promptBiasa: Tekan E untuk Berinteraksi
+  butuhItemSpesifik: 0
+  itemDibutuhkan: {fileID: 0}
+  namaItemTerdeteksi: Tidak Ada Item (Akan Error Jika Butuh Item)
+  promptJikaBawaItem: <color=#2ecc71>Tekan E untuk Gunakan Item</color>
+  promptJikaTidakBawaItem: <color=red>Butuh Item Spesifik</color>
+  lepasItemDariTangan: 0
+  titikPenempatanItem: {fileID: 0}
+  OnInteractSuccess:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1610946278}
+        m_TargetAssemblyTypeName: FIKIFOW_LootBox, Assembly-CSharp
+        m_MethodName: AmbilLoot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1629131301
 GameObject:
   m_ObjectHideFlags: 0

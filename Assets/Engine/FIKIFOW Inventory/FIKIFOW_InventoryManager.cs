@@ -378,4 +378,49 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         }
         return false;
     }
+
+    // =================================================================================
+    // FITUR BARU: Ambil item dari Loot Box dan paksa genggam (Force Equip)
+    // =================================================================================
+    public bool AddAndForceEquip(FIKIFOW_ImportantItem itemLoot)
+    {
+        if (itemsInInventory.Count >= maxCapacity)
+        {
+            Debug.LogWarning("Inventory Penuh, tidak bisa mengambil loot!");
+            return false; // Batal ambil karena tas penuh
+        }
+
+        // 1. Daftarkan item ke dalam tas sistem
+        itemsInInventory.Add(itemLoot);
+        itemLoot.gameObject.SetActive(false); 
+
+        // 2. Matikan aspek fisika dunia nyata karena item berpindah gaib dari kotak ke tangan
+        Collider col = itemLoot.GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        Rigidbody rb = itemLoot.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+
+        // 3. Logika Paksa Equip (Sesuai Permintaan)
+        if (hasRightArm && equippedRight == null) 
+        {
+            EquipItem(itemLoot, true); // Tangan kanan kosong, taruh kanan
+        }
+        else if (hasLeftArm && equippedLeft == null) 
+        {
+            EquipItem(itemLoot, false); // Tangan kiri kosong, taruh kiri
+        }
+        else if (hasRightArm) 
+        {
+            // Tangan penuh, paksa ganti yang di tangan kanan
+            EquipItem(itemLoot, true); 
+        }
+        else if (hasLeftArm)
+        {
+            // Tangan penuh (hanya punya lengan kiri), paksa ganti yang di kiri
+            EquipItem(itemLoot, false);
+        }
+
+        return true;
+    }
 }
