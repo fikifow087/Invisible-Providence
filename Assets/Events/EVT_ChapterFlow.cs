@@ -3,6 +3,7 @@ using System.Collections;
 public class EVT_ChapterFlow : MonoBehaviour
 {
     public GameObject TransisiHitam;
+    public ObjectiveTrigger CONNECT_ObjectiveTrigger;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,8 +16,14 @@ public class EVT_ChapterFlow : MonoBehaviour
         yield return StartCoroutine(FIKIFOW_GameOBJ_Transition.FadeOut(TransisiHitam, 0f, 120));
         KIRISA_DialogueSystem.Instance.StartDialogCallback(
             () => 
-            {          
+            {   
+                CONNECT_ObjectiveTrigger.misiBerikutnya = "Cari makanan di dapur";    
+                if (FIKIFOW_ObjectiveManager.Instance != null)
+                {
+                    FIKIFOW_ObjectiveManager.Instance.GantiMisi(CONNECT_ObjectiveTrigger.misiBerikutnya);
+                }   
                 Debug.Log("Dialog Selesai");
+                
             },
             new KirisaDialogLine(
                 mode: 1, 

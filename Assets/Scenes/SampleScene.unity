@@ -833,6 +833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EVT_ChapterFlow
   TransisiHitam: {fileID: 1629131301}
+  CONNECT_ObjectiveTrigger: {fileID: 567338921}
 --- !u!1 &56446936
 GameObject:
   m_ObjectHideFlags: 0
@@ -5820,6 +5821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 206c65af04b98104ab9dcb6c6e4e2075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveTrigger
+  gantiTeksMisi: 0
   misiBerikutnya: Periksa Dapur yang Terkunci
   eventTambahanSaatDisentuh:
     m_PersistentCalls:
