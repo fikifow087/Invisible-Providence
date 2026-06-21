@@ -25,6 +25,9 @@ public class FIKIFOW_LootBox : MonoBehaviour
     [Header("Visual & Audio Events")]
     [Tooltip("Centang ini jika ingin event (seperti animasi brankas buka) jalan LEBIH DULU, baru itemnya menyusul ditaruh ke tangan player.")]
     public bool panggilEventSebelumAmbil = false;
+    
+    [Tooltip("Beri jeda waktu (detik) setelah event dipanggil agar animasi membuka selesai dulu, baru item masuk ke tangan.")]
+    public float jedaSebelumAmbilItem = 1.2f;
 
     [Tooltip("Event tambahan saat box berhasil dibuka (Misal: Putar animasi buka pintu kulkas, putar suara engsel peti)")]
     public UnityEvent OnLootSuccess;
@@ -35,6 +38,7 @@ public class FIKIFOW_LootBox : MonoBehaviour
     private FIKIFOW_Interactable interactable;
     private string teksBiasaAsli; // Menyimpan teks default dari inspector (Misal: "Buka Kulkas")
     private Coroutine peringatanCoroutine;
+    private bool sedangProsesLoot = false; // Mencegah spam klik selama jeda animasi
 
     void Start()
     {
@@ -50,60 +54,87 @@ public class FIKIFOW_LootBox : MonoBehaviour
     // Fungsi utama yang dihubungkan ke UnityEvent milik FIKIFOW_Interactable
     public void AmbilLoot()
     {
-        if (sudahDiLoot || prefabItemLoot == null) return;
+        if (sudahDiLoot || sedangProsesLoot || prefabItemLoot == null) return;
 
         if (FIKIFOW_InventoryManager.Instance != null)
         {
-            // --- Trigger Event Lebih Dulu (Jika dicentang) ---
             if (panggilEventSebelumAmbil)
             {
-                OnLootSuccess?.Invoke();
-            }
-
-            // 1. Cetak objek item baru dari master Prefab
-            FIKIFOW_ImportantItem itemBaru = Instantiate(prefabItemLoot);
-            itemBaru.gameObject.name = prefabItemLoot.gameObject.name; 
-
-            // 2. Kirim ke Inventory Manager untuk di-Add dan Force Equip
-            bool suksesAmbil = FIKIFOW_InventoryManager.Instance.AddAndForceEquip(itemBaru);
-
-            if (suksesAmbil)
-            {
-                sudahDiLoot = true;
-
-                // 3. Update status Interactable agar pemain tahu kotak sudah kosong
-                if (interactable != null)
-                {
-                    // Pastikan Coroutine peringatan dihentikan jika sebelumnya sedang berjalan
-                    if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
-                    
-                    interactable.promptBiasa = teksSetelahKosong;
-                    if (matikanInteraksiSetelahLoot)
-                    {
-                        interactable.enabled = false; 
-                    }
-                }
-
-                // 4. Jalankan event JIKA TIDAK dicentang panggil di awal
-                if (!panggilEventSebelumAmbil)
-                {
-                    OnLootSuccess?.Invoke();
-                }
+                // Jika dicentang, jalankan proses loot menggunakan jeda waktu coroutine
+                StartCoroutine(ProsesLootDenganJeda());
             }
             else
             {
-                // Jika tas penuh, hancurkan item clone-nya
-                Destroy(itemBaru.gameObject);
+                // Jika tidak dicentang, langsung ambil instan seperti biasa
+                EksekusiAmbilItem();
+            }
+        }
+    }
+
+    // --- COROUTINE BARU: Memberikan waktu agar animasi bermain dulu ---
+    private IEnumerator ProsesLootDenganJeda()
+    {
+        sedangProsesLoot = true;
+
+        // 1. Jalankan event visual/audio dulu (misal: animasi kulkas/peti terbuka)
+        OnLootSuccess?.Invoke();
+
+        // 2. Tunggu selama beberapa detik di sini agar animasinya selesai
+        yield return new WaitForSeconds(jedaSebelumAmbilItem);
+
+        // 3. Setelah selesai menunggu, baru eksekusi ambil itemnya
+        EksekusiAmbilItem();
+
+        sedangProsesLoot = false;
+    }
+
+    // Memisahkan logika pengambilan item agar bisa dipanggil instan atau via jeda
+    private void EksekusiAmbilItem()
+    {
+        // Pastikan belum di-loot saat coroutine selesai
+        if (sudahDiLoot) return;
+
+        // 1. Cetak objek item baru dari master Prefab
+        FIKIFOW_ImportantItem itemBaru = Instantiate(prefabItemLoot);
+        itemBaru.gameObject.name = prefabItemLoot.gameObject.name; 
+
+        // 2. Kirim ke Inventory Manager untuk di-Add dan Force Equip
+        bool suksesAmbil = FIKIFOW_InventoryManager.Instance.AddAndForceEquip(itemBaru);
+
+        if (suksesAmbil)
+        {
+            sudahDiLoot = true;
+
+            // 3. Update status Interactable agar pemain tahu kotak sudah kosong
+            if (interactable != null)
+            {
+                if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
                 
-                // --- FITUR BARU: MUNCULKAN INDIKATOR PENUH ---
-                OnInventoryFull?.Invoke();
-                
-                if (interactable != null)
+                interactable.promptBiasa = teksSetelahKosong;
+                if (matikanInteraksiSetelahLoot)
                 {
-                    // Reset coroutine jika player nge-spam klik berkali-kali
-                    if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
-                    peringatanCoroutine = StartCoroutine(TampilkanPeringatanPenuh());
+                    interactable.enabled = false; 
                 }
+            }
+
+            // 4. Jalankan event JIKA TIDAK dicentang panggil di awal
+            if (!panggilEventSebelumAmbil)
+            {
+                OnLootSuccess?.Invoke();
+            }
+        }
+        else
+        {
+            // Jika tas penuh, hancurkan item clone-nya
+            Destroy(itemBaru.gameObject);
+            
+            // MUNCULKAN INDIKATOR PENUH
+            OnInventoryFull?.Invoke();
+            
+            if (interactable != null)
+            {
+                if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
+                peringatanCoroutine = StartCoroutine(TampilkanPeringatanPenuh());
             }
         }
     }
@@ -115,7 +146,6 @@ public class FIKIFOW_LootBox : MonoBehaviour
         
         yield return new WaitForSeconds(durasiTeksPenuh);
         
-        // Kembalikan ke teks semula HANYA jika status belum di-loot
         if (!sudahDiLoot)
         {
             interactable.promptBiasa = teksBiasaAsli;

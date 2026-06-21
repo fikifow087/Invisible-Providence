@@ -3,6 +3,8 @@ using UnityEngine;
 public class EVT_kulkas : MonoBehaviour
 {
     public EVT_ChapterFlow CONNECT_EVT_ChapterFlow;
+    public EVT_MakanNontonTV CONNECT_EVT_MakanNontonTV;
+    public bool sudahAmbilPizza = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,8 +17,14 @@ public class EVT_kulkas : MonoBehaviour
        KIRISA_DialogueSystem.Instance.StartDialogCallback(
             () => 
             {   
-                
-                Debug.Log("Dialog Selesai");
+                sudahAmbilPizza = true;
+                    Debug.Log("Dialog Selesai");
+                    
+                    // PANGGIL DI SINI: Aktifkan komponen sekali saja saat pizza didapat!
+                    if (CONNECT_EVT_MakanNontonTV != null)
+                    {
+                        CONNECT_EVT_MakanNontonTV.CekKondisiPizza();
+                    }
                 
             },
             new KirisaDialogLine(

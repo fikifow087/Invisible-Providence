@@ -8596,11 +8596,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 0bd40985244d4f346bb694be9e361776, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1788740347}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 0bd40985244d4f346bb694be9e361776, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1695889579}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 0bd40985244d4f346bb694be9e361776, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1695889585}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 0bd40985244d4f346bb694be9e361776, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1695889582}
   m_SourcePrefab: {fileID: 100100000, guid: 0bd40985244d4f346bb694be9e361776, type: 3}
 --- !u!4 &871885122 stripped
 Transform:
@@ -16753,6 +16762,7 @@ MonoBehaviour:
   teksTasPenuh: Inventory Penuh!
   durasiTeksPenuh: 2
   panggilEventSebelumAmbil: 0
+  jedaSebelumAmbilItem: 1.2
   OnLootSuccess:
     m_PersistentCalls:
       m_Calls:
@@ -16818,7 +16828,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de668322c436274fb378cdf784a7459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EVT_kulkas
-  CONNECT_EVT_ChapterFlow: {fileID: 0}
+  CONNECT_EVT_ChapterFlow: {fileID: 43850159}
+  CONNECT_EVT_MakanNontonTV: {fileID: 1695889585}
+  sudahAmbilPizza: 0
 --- !u!1 &1629131301
 GameObject:
   m_ObjectHideFlags: 0
@@ -17728,6 +17740,54 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.7579489, y: 1.6393096, z: 2.1250653}
   m_Center: {x: -0.00000071525596, y: 0.8196548, z: -0.0000009536748}
+--- !u!114 &1695889582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695889578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d11c33a706d60d4d98244f505a336e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_Interactable
+  promptBiasa: Tekan E untuk Berinteraksi
+  butuhItemSpesifik: 1
+  itemDibutuhkan: {fileID: 90365382}
+  namaItemTerdeteksi: Pizza2
+  promptJikaBawaItem: <color=#2ecc71>Tekan E untuk Gunakan Item</color>
+  promptJikaTidakBawaItem: <color=red>Butuh Item Spesifik</color>
+  lepasItemDariTangan: 1
+  titikPenempatanItem: {fileID: 1788740347}
+  OnInteractSuccess:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: EVT_MakanNontonTV, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1695889585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695889578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc269944a93fbf84b9354172eb538fcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EVT_MakanNontonTV
+  CONNECT_EVT_kulkas: {fileID: 1610946280}
 --- !u!1 &1697341368
 GameObject:
   m_ObjectHideFlags: 0
@@ -18536,6 +18596,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766930657}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1788740346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1788740347}
+  m_Layer: 6
+  m_Name: Lokasi Pizza Nonton TV
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1788740347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788740346}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.582, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 871885122}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1793911062
 PrefabInstance:
   m_ObjectHideFlags: 0
