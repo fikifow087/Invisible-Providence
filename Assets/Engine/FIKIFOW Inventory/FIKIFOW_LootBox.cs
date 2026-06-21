@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,15 +16,35 @@ public class FIKIFOW_LootBox : MonoBehaviour
     [Tooltip("Centang jika ingin objek ini tidak bisa disorot/di-klik sama sekali setelah kosong")]
     public bool matikanInteraksiSetelahLoot = false;
 
+    [Header("Peringatan Tas Penuh")]
+    [Tooltip("Teks yang muncul sejenak saat player mencoba ambil tapi tas penuh")]
+    public string teksTasPenuh = "Inventory Penuh!";
+    [Tooltip("Berapa lama teks 'Inventory Penuh!' muncul sebelum kembali normal?")]
+    public float durasiTeksPenuh = 2f;
+
     [Header("Visual & Audio Events")]
+    [Tooltip("Centang ini jika ingin event (seperti animasi brankas buka) jalan LEBIH DULU, baru itemnya menyusul ditaruh ke tangan player.")]
+    public bool panggilEventSebelumAmbil = false;
+
     [Tooltip("Event tambahan saat box berhasil dibuka (Misal: Putar animasi buka pintu kulkas, putar suara engsel peti)")]
     public UnityEvent OnLootSuccess;
 
+    [Tooltip("Event tambahan jika GAGAL ambil karena tas penuh (Misal: Putar suara error 'BZZT')")]
+    public UnityEvent OnInventoryFull;
+
     private FIKIFOW_Interactable interactable;
+    private string teksBiasaAsli; // Menyimpan teks default dari inspector (Misal: "Buka Kulkas")
+    private Coroutine peringatanCoroutine;
 
     void Start()
     {
         interactable = GetComponent<FIKIFOW_Interactable>();
+        
+        // Simpan teks asli saat game dimulai agar bisa dikembalikan setelah peringatan penuh selesai
+        if (interactable != null)
+        {
+            teksBiasaAsli = interactable.promptBiasa;
+        }
     }
 
     // Fungsi utama yang dihubungkan ke UnityEvent milik FIKIFOW_Interactable
@@ -33,9 +54,14 @@ public class FIKIFOW_LootBox : MonoBehaviour
 
         if (FIKIFOW_InventoryManager.Instance != null)
         {
+            // --- Trigger Event Lebih Dulu (Jika dicentang) ---
+            if (panggilEventSebelumAmbil)
+            {
+                OnLootSuccess?.Invoke();
+            }
+
             // 1. Cetak objek item baru dari master Prefab
             FIKIFOW_ImportantItem itemBaru = Instantiate(prefabItemLoot);
-            // Rapikan nama di Hierarchy agar tidak ada tulisan "(Clone)"
             itemBaru.gameObject.name = prefabItemLoot.gameObject.name; 
 
             // 2. Kirim ke Inventory Manager untuk di-Add dan Force Equip
@@ -48,6 +74,9 @@ public class FIKIFOW_LootBox : MonoBehaviour
                 // 3. Update status Interactable agar pemain tahu kotak sudah kosong
                 if (interactable != null)
                 {
+                    // Pastikan Coroutine peringatan dihentikan jika sebelumnya sedang berjalan
+                    if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
+                    
                     interactable.promptBiasa = teksSetelahKosong;
                     if (matikanInteraksiSetelahLoot)
                     {
@@ -55,14 +84,41 @@ public class FIKIFOW_LootBox : MonoBehaviour
                     }
                 }
 
-                // 4. Jalankan event visual/audio dari Inspector
-                OnLootSuccess?.Invoke();
+                // 4. Jalankan event JIKA TIDAK dicentang panggil di awal
+                if (!panggilEventSebelumAmbil)
+                {
+                    OnLootSuccess?.Invoke();
+                }
             }
             else
             {
-                // Jika tas ternyata penuh dan batal ambil, hancurkan kembali item yang terlanjur dicetak
+                // Jika tas penuh, hancurkan item clone-nya
                 Destroy(itemBaru.gameObject);
+                
+                // --- FITUR BARU: MUNCULKAN INDIKATOR PENUH ---
+                OnInventoryFull?.Invoke();
+                
+                if (interactable != null)
+                {
+                    // Reset coroutine jika player nge-spam klik berkali-kali
+                    if (peringatanCoroutine != null) StopCoroutine(peringatanCoroutine);
+                    peringatanCoroutine = StartCoroutine(TampilkanPeringatanPenuh());
+                }
             }
+        }
+    }
+
+    // Coroutine untuk memunculkan teks "Inventory Penuh!" lalu mengembalikannya seperti semula
+    private IEnumerator TampilkanPeringatanPenuh()
+    {
+        interactable.promptBiasa = teksTasPenuh;
+        
+        yield return new WaitForSeconds(durasiTeksPenuh);
+        
+        // Kembalikan ke teks semula HANYA jika status belum di-loot
+        if (!sudahDiLoot)
+        {
+            interactable.promptBiasa = teksBiasaAsli;
         }
     }
 }

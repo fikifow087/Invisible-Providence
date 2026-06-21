@@ -8680,6 +8680,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1610946278}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1610946280}
   m_SourcePrefab: {fileID: 100100000, guid: 70d005c5813061c41b6484de384fcb96, type: 3}
 --- !u!4 &891771139 stripped
 Transform:
@@ -13024,7 +13027,7 @@ MonoBehaviour:
   itemHoldPointL: {fileID: 1876413510}
   itemHoldPointR: {fileID: 766961836}
   dropPoint: {fileID: 134062318}
-  maxCapacity: 6
+  maxCapacity: 2
   inventoryPanel: {fileID: 1272117346}
   itemContainer: {fileID: 1057856561}
   textButtonPrefab: {fileID: 8872307411906358866, guid: 7b7a67e214811d34ea4a97d4351cb04d, type: 3}
@@ -16747,7 +16750,25 @@ MonoBehaviour:
   sudahDiLoot: 0
   teksSetelahKosong: Kosong
   matikanInteraksiSetelahLoot: 0
+  teksTasPenuh: Inventory Penuh!
+  durasiTeksPenuh: 2
+  panggilEventSebelumAmbil: 0
   OnLootSuccess:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1610946280}
+        m_TargetAssemblyTypeName: EVT_kulkas, Assembly-CSharp
+        m_MethodName: BukaKulkas
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInventoryFull:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1610946279
@@ -16785,6 +16806,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1610946280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610946274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de668322c436274fb378cdf784a7459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EVT_kulkas
+  CONNECT_EVT_ChapterFlow: {fileID: 0}
 --- !u!1 &1629131301
 GameObject:
   m_ObjectHideFlags: 0

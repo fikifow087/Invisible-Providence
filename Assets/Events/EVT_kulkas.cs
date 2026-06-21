@@ -10,7 +10,7 @@ public class EVT_kulkas : MonoBehaviour
         
     }
 
-    void BukaKulkas()
+    public void BukaKulkas()
     {
        KIRISA_DialogueSystem.Instance.StartDialogCallback(
             () => 
