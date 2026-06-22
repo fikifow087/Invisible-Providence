@@ -14,4 +14,13 @@ public class FIKIFOW_ImportantItem : MonoBehaviour
 
     [TextArea(2, 5)]
     public string deskripsiItem = "Sebuah objek misterius yang ditemukan di lantai.";
+
+    // --- FITUR BARU: Menyimpan scale asli ---
+    [HideInInspector] public Vector3 skalaAsli;
+
+    void Awake()
+    {
+        // Simpan ukuran asli saat game baru mulai agar tidak stretch saat ditaruh/dibuang
+        skalaAsli = transform.localScale;
+    }
 }

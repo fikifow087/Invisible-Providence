@@ -230,7 +230,7 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
         RefreshInventoryUI();
     }
 
-    // --- FITUR BARU: DROP BARANG (DENGAN FIX COLLIDER) ---
+    // --- FITUR BARU: DROP BARANG (DENGAN FIX COLLIDER & SCALE) ---
     public void ClickActionDrop()
     {
         if (selectedItem == null) return;
@@ -244,6 +244,9 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
 
         // 3. Keluarkan ke dunia nyata (Unparent)
         selectedItem.transform.SetParent(null); 
+        
+        // --- FIX STRETCH: Kembalikan ke ukuran aslinya ---
+        selectedItem.transform.localScale = selectedItem.skalaAsli;
         
         // Posisikan barang ke titik jatuh
         if (dropPoint != null) 
@@ -363,6 +366,10 @@ public class FIKIFOW_InventoryManager : MonoBehaviour
             itemDitemukan.transform.SetParent(parentBaru);
             itemDitemukan.transform.position = posisiTarget;
             itemDitemukan.transform.rotation = rotasiTarget;
+            
+            // --- FIX STRETCH: Kembalikan ukuran setelah diparent ke Titik Penempatan ---
+            itemDitemukan.transform.localScale = itemDitemukan.skalaAsli;
+
             itemDitemukan.gameObject.SetActive(true);
 
             // Nyalakan kembali fisik dunia nyata agar objek diam rapi di target lokasi
