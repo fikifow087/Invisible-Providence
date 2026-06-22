@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class EVT_MakanNontonTV : MonoBehaviour
+public class EVT_S4_MakanNontonTV : MonoBehaviour
 {
     private FIKIFOW_Interactable scriptInteraksi;
-    public EVT_kulkas CONNECT_EVT_kulkas;
+    public EVT_S2_kulkas CONNECT_EVT_kulkas;
+    public EVT_S3_PizzaToOven CONNECT_EVT_PizzaToOven;
 
     void Start()
     {
@@ -19,7 +20,7 @@ public class EVT_MakanNontonTV : MonoBehaviour
     // Ubah menjadi PUBLIC agar bisa dipanggil dari script Kulkas
     public void CekKondisiPizza()
     {
-        if (CONNECT_EVT_kulkas != null && CONNECT_EVT_kulkas.sudahAmbilPizza)
+        if (CONNECT_EVT_kulkas != null && CONNECT_EVT_kulkas.sudahAmbilPizza && CONNECT_EVT_PizzaToOven.PizzaSudahHangat)
         {
             if (scriptInteraksi != null)
             {

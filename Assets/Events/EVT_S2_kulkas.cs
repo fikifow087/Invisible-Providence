@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class EVT_kulkas : MonoBehaviour
+public class EVT_S2_kulkas : MonoBehaviour
 {
-    public EVT_ChapterFlow CONNECT_EVT_ChapterFlow;
-    public EVT_MakanNontonTV CONNECT_EVT_MakanNontonTV;
+    public EVT_S1_ChapterFlow CONNECT_EVT_ChapterFlow;
+    public EVT_S4_MakanNontonTV CONNECT_EVT_MakanNontonTV;
     public bool sudahAmbilPizza = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

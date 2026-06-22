@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class EVT_ChapterFlow : MonoBehaviour
+public class EVT_S1_ChapterFlow : MonoBehaviour
 {
     public GameObject TransisiHitam;
     public ObjectiveTrigger CONNECT_ObjectiveTrigger;
