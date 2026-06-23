@@ -18714,6 +18714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TVController
   videoPlayer: {fileID: 1648314771}
+  audioSource: {fileID: 1648314773}
   daftarChannel:
   - {fileID: 32900000, guid: 90f2f29ac4752c140a6f986881dee866, type: 3}
   - {fileID: 32900000, guid: 37a2f0ca7d9f2d14aa72c90579bc0c97, type: 3}
@@ -18727,7 +18728,7 @@ AudioSource:
   m_GameObject: {fileID: 348073196}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 487ac0bda2337414bb37b740f9ace223, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -18740,7 +18741,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 15
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -18775,7 +18776,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -18790,7 +18791,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.11111111
       inSlope: 0
       outSlope: 0
       tangentMode: 0
