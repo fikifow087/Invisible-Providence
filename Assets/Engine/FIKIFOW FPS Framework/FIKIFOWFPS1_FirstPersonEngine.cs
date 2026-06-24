@@ -245,4 +245,12 @@ public class FIKIFOWFPS1_FirstPersonEngine : MonoBehaviour
         if (lookInput != null && lookInput.action != null) lookInput.action.Enable();
         if (sprintInput != null && sprintInput.action != null) sprintInput.action.Enable();
     }
+
+    // ====================================================
+    // TAMBAHKAN FUNGSI INI UNTUK MENCEGAH CAMERA SNAPPING
+    // ====================================================
+    public void ResetCameraPitch(float targetPitch = 0f)
+    {
+        xRotation = targetPitch; // Reset memori rotasi atas/bawah kamera
+    }
 }
