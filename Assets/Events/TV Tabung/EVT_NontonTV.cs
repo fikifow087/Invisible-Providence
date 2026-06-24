@@ -47,7 +47,7 @@ public class EVT_NontonTV : MonoBehaviour
     }
     // ==========================================
 
-    
+
     void Start()
     {
         UI_GantiChannelTV.SetActive(false);
@@ -64,6 +64,12 @@ public class EVT_NontonTV : MonoBehaviour
     void OnClick_STOP_NontonTV()
     {
         Debug.Log("Berhenti Nonton TV");
+        
+        if (CONNECT_TVController != null)
+        {
+            CONNECT_TVController.StopDanClearTV();
+        }
+
         UI_GantiChannelTV.SetActive(false);
         sedangNontonTV = false;
         if (Event_List_Setelah_NontonTV != null)

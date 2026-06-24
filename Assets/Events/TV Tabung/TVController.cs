@@ -76,4 +76,30 @@ public class TVController : MonoBehaviour
             Debug.LogError("Channel tidak ditemukan!");
         }
     }
+
+    // ====================================================
+    // FUNGSI BARU: Menghentikan video dan mengosongkan clip
+    // ====================================================
+    public void StopDanClearTV()
+    {
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();      // Menghentikan putaran video
+            videoPlayer.clip = null;  // Menghapus video yang menempel
+
+            // PAKSA RENDER TEXTURE MENJADI HITAM TOTAL
+            if (videoPlayer.targetTexture != null)
+            {
+                RenderTexture rt = videoPlayer.targetTexture;
+                RenderTexture prevActive = RenderTexture.active;
+                
+                RenderTexture.active = rt;
+                GL.Clear(true, true, Color.black); // Wajah layar TV dibersihkan jadi hitam polos
+                
+                RenderTexture.active = prevActive;
+            }
+
+            Debug.Log("TV Berhasil Dimatikan, Clip Dikosongkan, dan Layar Di-reset Hitam.");
+        }
+    }
 }
