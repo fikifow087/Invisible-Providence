@@ -16247,6 +16247,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.6685742, y: 1.5974683, z: 0.9318509}
   m_Center: {x: 0, y: 0.7987341, z: 0.46592602}
+--- !u!1 &1471048212 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+  m_PrefabInstance: {fileID: 1793911062}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1478263589
 GameObject:
   m_ObjectHideFlags: 0
@@ -20100,14 +20105,89 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1349536552021346030, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2060989776}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1793911071}
+    - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1793911070}
+    - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1793911072}
   m_SourcePrefab: {fileID: 100100000, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
 --- !u!4 &1793911063 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1349536552021346030, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
   m_PrefabInstance: {fileID: 1793911062}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1793911070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471048212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8625ce451c4045d42b75ffe7fb3715da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_SitToWatchTV
+  sitPoint: {fileID: 2060989776}
+  tvTarget: {fileID: 847357742}
+  readModeScript: {fileID: 1793911071}
+  transitionSpeed: 2
+--- !u!114 &1793911071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471048212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298776cbae9d5324987430f82ccf8e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReadMode
+--- !u!114 &1793911072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471048212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d11c33a706d60d4d98244f505a336e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_Interactable
+  promptBiasa: Tekan E untuk Berinteraksi
+  butuhItemSpesifik: 0
+  itemDibutuhkan: {fileID: 0}
+  namaItemTerdeteksi: Tidak Ada Item (Akan Error Jika Butuh Item)
+  promptJikaBawaItem: <color=#2ecc71>Tekan E untuk Gunakan Item</color>
+  promptJikaTidakBawaItem: <color=red>Butuh Item Spesifik</color>
+  lepasItemDariTangan: 0
+  titikPenempatanItem: {fileID: 0}
+  OnInteractSuccess:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1793911070}
+        m_TargetAssemblyTypeName: FIKIFOW_SitToWatchTV, Assembly-CSharp
+        m_MethodName: SitDown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1809555603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: d88965db5a659e4478caa5547555f289, type: 3}
@@ -23229,6 +23309,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059169669}
   m_CullTransparentMesh: 1
+--- !u!1 &2060989775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2060989776}
+  m_Layer: 6
+  m_Name: SitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2060989776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060989775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1793911063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2061321668
 GameObject:
   m_ObjectHideFlags: 0
