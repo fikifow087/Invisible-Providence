@@ -12,7 +12,7 @@ public class TVController : MonoBehaviour
     [Tooltip("Masukkan semua video clip untuk masing-masing channel di sini")]
     public List<VideoClip> daftarChannel = new List<VideoClip>();
 
-    private int channelAktif = 0;
+    public int channelAktif = 0;
 
     void Start()
     {
