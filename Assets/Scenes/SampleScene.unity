@@ -19221,9 +19221,9 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
-  m_Looping: 0
+  m_Looping: 1
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
@@ -20747,6 +20747,7 @@ MonoBehaviour:
   CONNECT_TVController: {fileID: 1648314772}
   UI_GantiChannelTV: {fileID: 382966852}
   HarusNontonSeginiDuluBaruLanjut: {fileID: 2102124134}
+  CANCEL_NontonTV: {fileID: 1039768482}
   sedangNontonTV: 0
   current_MisiNontonTV: 0
   max_MisiNontonTV: 3
@@ -20765,6 +20766,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  channelSudahDitonton: 
 --- !u!1 &1809555603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: d88965db5a659e4478caa5547555f289, type: 3}

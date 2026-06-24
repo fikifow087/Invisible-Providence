@@ -30,7 +30,7 @@ public class TVController : MonoBehaviour
 
         if (daftarChannel.Count > 0)
         {
-            PindahChannel(0);
+            //PindahChannel(0);
         }
     }
 
