@@ -4,10 +4,10 @@ using UnityEngine;
 public class FIKIFOW_SitToWatchTV : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("Target posisi duduk (Objek kosong yang dibuat di Langkah 1)")]
+    [Tooltip("Target posisi duduk (Objek kosong di atas kursi)")]
     [SerializeField] private Transform sitPoint;
     
-    [Tooltip("Target TV yang ingin dilihat (Bisa drag objek TV-nya ke sini)")]
+    [Tooltip("Target TV yang ingin dilihat")]
     [SerializeField] private Transform tvTarget;
     
     [Tooltip("Script ReadMode yang ada di scene kamu")]
@@ -19,12 +19,9 @@ public class FIKIFOW_SitToWatchTV : MonoBehaviour
 
     private bool isSitting = false;
 
-    // Fungsi utama yang akan dipanggil oleh FIKIFOW_Interactable (OnInteractSuccess)
     public void SitDown()
     {
         if (isSitting) return;
-
-        // Mulai proses duduk secara mulus menggunakan Coroutine
         StartCoroutine(SitDownSequence());
     }
 
@@ -33,11 +30,11 @@ public class FIKIFOW_SitToWatchTV : MonoBehaviour
         var fpsEngine = FIKIFOWFPS1_FirstPersonEngine.Instance;
         if (fpsEngine == null) yield break;
 
-        // 1. Ambil CharacterController untuk dimatikan sementara agar tidak bentrok dengan Lerp posisi
+        // 1. Matikan CharacterController agar tidak bentrok dengan Lerp
         CharacterController cc = fpsEngine.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
 
-        // 2. Aktifkan Read Mode (Memblokir input pergerakan & memunculkan kursor mouse)
+        // 2. Blokir input (Ini akan menghentikan kamera mengikuti kepala di FPS Engine)
         if (readModeScript != null)
         {
             readModeScript.ReadMode_ON();
@@ -47,47 +44,59 @@ public class FIKIFOW_SitToWatchTV : MonoBehaviour
             fpsEngine.BlockInput();
         }
 
-        // 3. Catat posisi dan rotasi awal player/kamera sebelum bergerak
         Vector3 startPlayerPos = fpsEngine.transform.position;
         Quaternion startPlayerRot = fpsEngine.transform.rotation;
         Quaternion startCameraRot = fpsEngine.cameraHolder.rotation;
 
-        // 4. Hitung arah rotasi target ke TV (Hanya horizontal Y untuk badan Player)
+        // Hitung arah badan (Hanya sumbu Y agar tidak miring)
         Vector3 directionToTV = tvTarget.position - sitPoint.position;
-        directionToTV.y = 0; // Biar badan player gak mendongak/nunduk, tetap tegak
+        directionToTV.y = 0; 
         Quaternion targetPlayerRot = Quaternion.LookRotation(directionToTV);
 
-        // 5. Hitung arah rotasi target untuk kamera (Melihat langsung ke TV secara presisi)
-        Vector3 camDirectionToTV = tvTarget.position - fpsEngine.cameraHolder.position;
-        Quaternion targetCameraRot = Quaternion.LookRotation(camDirectionToTV);
-
-        // 6. Proses Transisi Mulus (Lerp & Slerp)
         float elapsed = 0f;
         while (elapsed < 1f)
         {
             elapsed += Time.deltaTime * transitionSpeed;
 
-            // Maju/geser posisi player ke kursi secara mulus
+            // A. Geser posisi badan player ke kursi
             fpsEngine.transform.position = Vector3.Lerp(startPlayerPos, sitPoint.position, elapsed);
 
-            // Putar badan player menghadap ke TV secara horizontal
+            // B. Putar badan player menghadap ke TV
             fpsEngine.transform.rotation = Quaternion.Slerp(startPlayerRot, targetPlayerRot, elapsed);
 
-            // Putar kamera holder agar pas membidik ke arah TV
-            fpsEngine.cameraHolder.rotation = Quaternion.Slerp(startCameraRot, targetCameraRot, elapsed);
+            // C. FIX BUG: Tarik posisi kamera secara manual agar tetap menempel di kepala player
+            if (fpsEngine.cameraHolder != null && fpsEngine.headBone != null)
+            {
+                fpsEngine.cameraHolder.position = fpsEngine.headBone.position;
+            }
+
+            // D. FOKUS ROTASI: Hitung arah kamera ke TV secara real-time dari posisinya saat ini
+            if (fpsEngine.cameraHolder != null)
+            {
+                Vector3 currentCamDir = tvTarget.position - fpsEngine.cameraHolder.position;
+                Quaternion currentTargetCamRot = Quaternion.LookRotation(currentCamDir);
+                
+                // Putar kepala (kamera) ke TV secara mulus
+                fpsEngine.cameraHolder.rotation = Quaternion.Slerp(startCameraRot, currentTargetCamRot, elapsed);
+            }
 
             yield return null;
         }
 
-        // 7. Kunci posisi akhir agar presisi sempurna di target
+        // Kunci akhir agar presisi sempurna
         fpsEngine.transform.position = sitPoint.position;
         fpsEngine.transform.rotation = targetPlayerRot;
-        fpsEngine.cameraHolder.rotation = targetCameraRot;
+
+        if (fpsEngine.cameraHolder != null && fpsEngine.headBone != null)
+        {
+            fpsEngine.cameraHolder.position = fpsEngine.headBone.position;
+            Vector3 finalCamDir = tvTarget.position - fpsEngine.cameraHolder.position;
+            fpsEngine.cameraHolder.rotation = Quaternion.LookRotation(finalCamDir);
+        }
 
         isSitting = true;
     }
 
-    // BONUS: Fungsi untuk berdiri kembali dari kursi (Bisa dipanggil via tombol UI Keluar/Back)
     public void StandUp()
     {
         if (!isSitting) return;
@@ -95,11 +104,9 @@ public class FIKIFOW_SitToWatchTV : MonoBehaviour
         var fpsEngine = FIKIFOWFPS1_FirstPersonEngine.Instance;
         if (fpsEngine == null) return;
 
-        // Nyalakan kembali fisik CharacterController
         CharacterController cc = fpsEngine.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = true;
 
-        // Kembalikan kontrol game ke mode FPS biasa
         if (readModeScript != null)
         {
             readModeScript.ReadMode_OFF();
