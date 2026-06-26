@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class EVT_AdaSuaraDiruangan : MonoBehaviour
 {
@@ -21,18 +22,67 @@ public class EVT_AdaSuaraDiruangan : MonoBehaviour
     void Start()
     {
         //CONNECT_EVT_NontonTV.REQ_EventTV_completion = false;
+        COL_suaraDiruangan2.SetActive(false);
     }
 
-    public void COLLISION_SuaraDiruangan1()
+    public void OnClick_SuaraDiruangan1()
     {
-        cameraRotFocus.TriggerFocus(titikSuaraMisterius2, 0.5f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 2f);
+        StartCoroutine(COLLISION_SuaraDiruangan1());
+    }
+
+    public void OnClick_SuaraDiruangan2()
+    {
+        StartCoroutine(COLLISION_SuaraDiruangan2());
+    }
+
+    IEnumerator COLLISION_SuaraDiruangan1()
+    {
+        COL_suaraDiruangan2.SetActive(true);
         SFXS_suaraDiruangan2.Play();
+        cameraRotFocus.TriggerFocus(titikSuaraMisterius2, 0.3f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 0f);
+        yield return new WaitForSeconds(1f);
+        KIRISA_DialogueSystem.Instance.StartDialogCallback(
+            () => 
+            {   
+                if (FIKIFOWFPS1_FirstPersonEngine.Instance != null)
+                {
+                    FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+                }
+                Debug.Log("Dialog Selesai");
+                
+            },
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "!!!", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "NJIR APA SIH!", 
+                portrait: "", 
+                voice: ""
+            ),
+            new KirisaDialogLine(
+                mode: 1, 
+                duration: 0f,
+                speaker: "ADRIAN", 
+                dialog: "Pasti tikus ini.", 
+                portrait: "", 
+                voice: ""
+            )
+        );
     }
 
-    public void COLLISION_SuaraDiruangan2()
+    IEnumerator COLLISION_SuaraDiruangan2()
     {
-        cameraRotFocus.TriggerFocus(titikSuaraMisterius1, 0.5f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 2f);
         SFXS_suaraDiruangan1.Play();
+        cameraRotFocus.TriggerFocus(titikSuaraMisterius1, 0.3f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 2f);
+        yield return new WaitForSeconds(1f);
     }
 
     // Update is called once per frame
