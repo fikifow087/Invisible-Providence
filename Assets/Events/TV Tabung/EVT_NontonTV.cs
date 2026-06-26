@@ -19,6 +19,7 @@ public class EVT_NontonTV : MonoBehaviour
     public GameObject CANCEL_NontonTV;
     
     [Header("Variabel Dan Event")]
+    public bool REQ_EventTV_completion = false;
     public bool sedangNontonTV = false;
     [SerializeField] private int current_MisiNontonTV = 0;
     [SerializeField] private int max_MisiNontonTV = 3;
@@ -136,6 +137,7 @@ public class EVT_NontonTV : MonoBehaviour
             }
             
             current_MisiNontonTV = max_MisiNontonTV;
+            REQ_EventTV_completion = true;
             Debug.Log("Misi Nonton TV Berhasil Sepenuhnya"); // Log keberhasilan sesuai request
         }
 
