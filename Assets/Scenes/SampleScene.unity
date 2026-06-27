@@ -3953,6 +3953,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1550344678}
   - {fileID: 129104744}
   - {fileID: 589057195}
   m_Father: {fileID: 476021720}
@@ -3975,6 +3976,7 @@ MonoBehaviour:
   cameraRotFocus: {fileID: 266892580}
   titikSuaraMisterius1: {fileID: 129104744}
   titikSuaraMisterius2: {fileID: 589057195}
+  titik_AwalSuaraMisterius: {fileID: 1550344678}
   COL_suaraDiruangan1: {fileID: 129104743}
   COL_suaraDiruangan2: {fileID: 589057194}
 --- !u!82 &266892579
@@ -18066,6 +18068,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547239965}
   m_Mesh: {fileID: -3410944087502363961, guid: 6daf98112d3e9c442a44d6b0e77d0668, type: 3}
+--- !u!1 &1550344677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1550344678}
+  m_Layer: 6
+  m_Name: CamRotFocus_SuaraAneh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1550344678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550344677}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 8.584, y: 1.448, z: 10.150002}
+  m_LocalScale: {x: 2.4999995, y: 1.0999998, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 266892577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1551852887
 GameObject:
   m_ObjectHideFlags: 0
@@ -21395,6 +21428,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1793911086}
+    - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1793911071}
     - targetCorrespondingSourceObject: {fileID: 1869368729701391444, guid: 464541c6e7e01fc4cb78903d9420029a, type: 3}
       insertIndex: -1
@@ -21502,10 +21538,10 @@ MonoBehaviour:
   CONNECT_EVT_kulkas: {fileID: 1610946280}
   CONNECT_EVT_PizzaToOven: {fileID: 1121885230}
   CONNECT_TVController: {fileID: 1648314772}
+  CONNECT_EVT_AdaSuaraDiruangan: {fileID: 266892578}
   UI_GantiChannelTV: {fileID: 382966852}
   HarusNontonSeginiDuluBaruLanjut: {fileID: 2102124134}
   CANCEL_NontonTV: {fileID: 1039768482}
-  REQ_EventTV_completion: 0
   sedangNontonTV: 0
   current_MisiNontonTV: 0
   max_MisiNontonTV: 3
@@ -21524,7 +21560,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  GO_KemunculanSuaraAneh: {fileID: 266892576}
+  CamRotFocus_SuaraAneh: {fileID: 1550344677}
+  EVTmini_TahanUntukStory_NontonTV: 1
+  REQ_EventTV_completion: 0
   channelSudahDitonton: 
+--- !u!114 &1793911086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471048212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e464b501cfd0de841ab68bcb290944af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_CameraRotationFocus
+  focusTarget: {fileID: 0}
+  transitionDuration: 1
+  interpolationType: 1
+  blockInputFPS: 1
+  holdDuration: 0
 --- !u!1 &1809555603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: d88965db5a659e4478caa5547555f289, type: 3}

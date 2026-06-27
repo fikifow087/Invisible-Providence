@@ -4,8 +4,8 @@ using System.Collections;
 public class EVT_AdaSuaraDiruangan : MonoBehaviour
 {
     public EVT_NontonTV CONNECT_EVT_NontonTV;
-    [SerializeField] private AudioSource SFXS_suaraDiruangan1;
-    [SerializeField] private AudioSource SFXS_suaraDiruangan2;
+    public AudioSource SFXS_suaraDiruangan1;
+    public AudioSource SFXS_suaraDiruangan2;
     
     // Hubungkan komponen script focus yang terpasang di scene
     public FIKIFOW_CameraRotationFocus cameraRotFocus; 
@@ -13,6 +13,7 @@ public class EVT_AdaSuaraDiruangan : MonoBehaviour
     // Titik kosong (Empty GameObject) letak mangkok bakso misterius atau wajah NPC
     public Transform titikSuaraMisterius1;
     public Transform titikSuaraMisterius2;
+    public Transform titik_AwalSuaraMisterius;
 
     public GameObject COL_suaraDiruangan1;
     public GameObject COL_suaraDiruangan2;
