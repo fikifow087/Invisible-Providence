@@ -3,31 +3,26 @@ using UnityEngine;
 public class XCOM_ObjectStepAndMove : MonoBehaviour
 {
     [Header("Pergerakan")]
-    [SerializeField] private Transform targetPoint; // Game object kosong sebagai target
-    [SerializeField] private float moveSpeed = 2f;    // Kecepatan jalan yang bisa diatur
-    [SerializeField] private float reachDistance = 0.1f; // Jarak toleransi dianggap "sampai"
+    [SerializeField] private Transform targetPoint; 
+    [SerializeField] private float moveSpeed = 2f;    
+    [SerializeField] private float reachDistance = 0.1f; 
 
     [Header("Audio SFX")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip[] footstepClips; // Array biar langkah kakinya bervariasi (tidak monoton)
-    [SerializeField] private float footstepInterval = 0.5f; // Jeda waktu antar langkah (makin kecil makin cepat)
+    [SerializeField] private AudioClip[] footstepClips; 
+    [SerializeField] private float footstepInterval = 0.5f; 
 
     private float footstepTimer;
     private bool isMoving = false;
 
     void Start()
     {
-        // Auto-ambil AudioSource jika lupa di-assign di Inspector
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
 
-        // Mulai pergerakan jika target sudah ditentukan
-        if (targetPoint != null)
-        {
-            isMoving = true;
-        }
+        // HAPUS otomatis isMoving = true di sini agar dikontrol oleh skrip CUT_Suara
     }
 
     void Update()
@@ -39,12 +34,30 @@ public class XCOM_ObjectStepAndMove : MonoBehaviour
         }
     }
 
+    // FUNGSI BARU: Untuk dipanggil oleh skrip CUT_Suara saat event dimulai
+    public void StartMoving()
+    {
+        if (targetPoint != null)
+        {
+            isMoving = true;
+            this.enabled = true; // Memastikan komponen dalam keadaan aktif
+        }
+        else
+        {
+            Debug.LogWarning("Gagal jalan: Target Point belum di-assign di " + gameObject.name);
+        }
+    }
+
+    // FUNGSI BARU: Untuk menghentikan paksa jika diperlukan di tengah jalan
+    public void StopMoving()
+    {
+        isMoving = false;
+    }
+
     void MoveTowardsTarget()
     {
-        // Menggerakkan object menuju posisi targetPoint secara halus
         transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
 
-        // Cek apakah jarak ke target sudah sangat dekat
         if (Vector3.Distance(transform.position, targetPoint.position) <= reachDistance)
         {
             isMoving = false;
@@ -54,13 +67,11 @@ public class XCOM_ObjectStepAndMove : MonoBehaviour
 
     void HandleFootsteps()
     {
-        // Hitung mundur timer langkah kaki
         footstepTimer -= Time.deltaTime;
-
         if (footstepTimer <= 0f)
         {
             PlayFootstepSound();
-            footstepTimer = footstepInterval; // Reset timer ke jeda yang ditentukan
+            footstepTimer = footstepInterval; 
         }
     }
 
@@ -68,16 +79,15 @@ public class XCOM_ObjectStepAndMove : MonoBehaviour
     {
         if (audioSource != null && footstepClips.Length > 0)
         {
-            // Ambil clip random dari array supaya suara langkahnya lebih natural
             int randomIndex = Random.Range(0, footstepClips.Length);
             audioSource.PlayOneShot(footstepClips[randomIndex]);
         }
     }
 
-    // Fungsi trigger ketika musuh sampai di titik tujuan
     void OnReachedTarget()
     {
         Debug.Log("Musuh misterius telah sampai di target point!");
-        // Kamu bisa memicu event cutscene selanjutnya di sini (misal: dialog baru, ganti scene, dsb.)
+        // Kamu juga bisa menonaktifkan komponen ini kembali setelah sampai tujuan
+        this.enabled = false; 
     }
 }
