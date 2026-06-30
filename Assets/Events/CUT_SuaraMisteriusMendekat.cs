@@ -1,13 +1,17 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.InputSystem;
 
 public class CUT_SuaraMisteriusMendekat : MonoBehaviour
 {
     [Header("Referensi Objek Misterius")]
     // Tarik Game Object musuh yang memiliki komponen XCOM ke kolom ini di Inspector
     [SerializeField] private XCOM_ObjectStepAndMove enemyXcomComponent;
+    public FIKIFOW_CameraRotationFocus cameraRotFocus; 
 
     [Header("Trigger Event (Contoh)")]
     [SerializeField] private bool triggerMulaiLewatInspector = false;
+    public Transform titikSuaraKaki;
 
     void Start()
     {
@@ -28,6 +32,11 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
             triggerMulaiLewatInspector = false; // Reset trigger agar tidak ke-call terus-menerus
             TriggerCutsceneSuara();
         }
+
+        if (Keyboard.current.zKey.wasPressedThisFrame)
+        {
+            Load_SuaraMisteriusMendekat();
+        }
     }
 
     // Panggil fungsi ini kapan pun event cutscene kamu dimulai (misal dari sistem dialog atau trigger area)
@@ -41,5 +50,94 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
             enemyXcomComponent.enabled = true; 
             enemyXcomComponent.StartMoving();
         }
+    }
+
+    public void Load_SuaraMisteriusMendekat()
+    {
+        StartCoroutine(MulaiCutscene_SuaraMisteriusMendekat());
+    }
+
+    IEnumerator MulaiCutscene_SuaraMisteriusMendekat()
+    {
+        int LanjutanDialog = 0;
+
+        if (LanjutanDialog == 0)
+        {
+            KIRISA_DialogueSystem.Instance.StartDialogCallback(
+                () => 
+                {   
+                    cameraRotFocus.TriggerFocus(titikSuaraKaki, 2f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 0f);
+                    LanjutanDialog = 1;
+                },
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "...", 
+                    portrait: "", 
+                    voice: ""
+                ),
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "Aku tak suka ini...", 
+                    portrait: "", 
+                    voice: ""
+                ),
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "Apa yang menyebabkan suara tadi!?", 
+                    portrait: "", 
+                    voice: ""
+                )
+            );
+        }
+        if (LanjutanDialog == 1)
+        {
+            KIRISA_DialogueSystem.Instance.StartDialogCallback(
+                () => 
+                {   
+                    if (FIKIFOWFPS1_FirstPersonEngine.Instance != null)
+                    {
+                        FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+                    }
+                    Debug.Log("Dialog Selesai");
+                    
+                },
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "!!!", 
+                    portrait: "", 
+                    voice: ""
+                ),
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "HAH!", 
+                    portrait: "", 
+                    voice: ""
+                ),
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "Ada sesuatu yang mendekat!", 
+                    portrait: "", 
+                    voice: ""
+                )
+            );
+        }
+        
+
+
+
+        
+       yield return new WaitForSeconds(1f);
     }
 }

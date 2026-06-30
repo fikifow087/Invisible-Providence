@@ -18,6 +18,8 @@ public class EVT_AdaSuaraDiruangan : MonoBehaviour
     public GameObject COL_suaraDiruangan1;
     public GameObject COL_suaraDiruangan2;
 
+    public CUT_SuaraMisteriusMendekat SC_CUT_SuaraMisteriusMendekat;
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -81,8 +83,9 @@ public class EVT_AdaSuaraDiruangan : MonoBehaviour
 
     IEnumerator COLLISION_SuaraDiruangan2()
     {
-        SFXS_suaraDiruangan1.Play();
-        cameraRotFocus.TriggerFocus(titikSuaraMisterius1, 0.3f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 2f);
+        //SFXS_suaraDiruangan1.Play();
+        //cameraRotFocus.TriggerFocus(titikSuaraMisterius1, 0.3f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 2f);
+        SC_CUT_SuaraMisteriusMendekat.Load_SuaraMisteriusMendekat();
         yield return new WaitForSeconds(1f);
     }
 

@@ -12348,6 +12348,7 @@ MonoBehaviour:
   titik_AwalSuaraMisterius: {fileID: 1550344678}
   COL_suaraDiruangan1: {fileID: 129104743}
   COL_suaraDiruangan2: {fileID: 589057194}
+  SC_CUT_SuaraMisteriusMendekat: {fileID: 1803019557}
 --- !u!82 &266892579
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16068,6 +16069,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 463750, guid: e68faaa5192b504429a181aad36d18c1, type: 3}
   m_PrefabInstance: {fileID: 371887633}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &374987222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 374987223}
+  m_Layer: 0
+  m_Name: Target Cam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &374987223
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374987222}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.566, y: 1.171, z: 0.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1803019556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &375027355
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18372,6 +18404,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6445537640210706534, guid: 26d160590c290d6479ff3ef9ccfa6ab8, type: 3}
   m_PrefabInstance: {fileID: 443829529}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &448760454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 448760456}
+  - component: {fileID: 448760455}
+  m_Layer: 0
+  m_Name: Addon - Camera Rotation Focus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &448760455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448760454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e464b501cfd0de841ab68bcb290944af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FIKIFOW_CameraRotationFocus
+  focusTarget: {fileID: 0}
+  transitionDuration: 1
+  interpolationType: 1
+  blockInputFPS: 1
+  holdDuration: 0
+--- !u!4 &448760456
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448760454}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 71.47743, y: -16.37908, z: 5.39034}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &450146701
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71352,6 +71433,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 198703244}
+  - {fileID: 374987223}
   - {fileID: 187111770}
   m_Father: {fileID: 766997576}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -71368,7 +71450,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CUT_SuaraMisteriusMendekat
   enemyXcomComponent: {fileID: 187111774}
+  cameraRotFocus: {fileID: 448760455}
   triggerMulaiLewatInspector: 0
+  titikSuaraKaki: {fileID: 374987223}
 --- !u!1001 &1803770851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -87379,6 +87463,7 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1726342896}
+  - {fileID: 448760456}
   - {fileID: 1936929640}
   - {fileID: 1034043849}
   - {fileID: 1270601224}
