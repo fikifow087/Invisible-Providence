@@ -9603,7 +9603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XCOM_ObjectStepAndMove
   targetPoint: {fileID: 198703244}
-  moveSpeed: 2
+  moveSpeed: 0.4
   reachDistance: 0.1
   audioSource: {fileID: 187111775}
   footstepClips:
@@ -9613,7 +9613,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0cdcabe1c9403bf409eedc57fc346a77, type: 3}
   - {fileID: 8300000, guid: a47410186f2a0d04498f1de78b46ecf3, type: 3}
   - {fileID: 8300000, guid: 86ab8bea0219b7b4bac200a9f4e76820, type: 3}
-  footstepInterval: 0.5
+  strideLength: 1
 --- !u!82 &187111775
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9626,7 +9626,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -9638,7 +9638,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 20
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -9646,23 +9646,59 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.05
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -5.5067763
+      outSlope: -5.5067763
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0.36498854
+    - serializedVersion: 3
+      time: 0.14330825
+      value: 0.7968216
+      inSlope: -3.0593188
+      outSlope: -3.0593188
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.5941974
+    - serializedVersion: 3
+      time: 0.26692504
+      value: 0.61667633
+      inSlope: -2.468772
+      outSlope: -2.468772
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.42592582
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.44331208
+      value: 0.38110352
+      inSlope: -1.4333869
+      outSlope: -1.4333869
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.7606753
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.8
+      value: 0.0625
+      inSlope: -0.07815612
+      outSlope: -0.07815612
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
+      value: 0.05
+      inSlope: -0.05001994
+      outSlope: -0.05001994
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -9686,7 +9722,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.083333336
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -9701,7 +9737,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 1.1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -9868,7 +9904,7 @@ Transform:
   m_GameObject: {fileID: 198703243}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.06, y: 0.4717245, z: 0.98}
+  m_LocalPosition: {x: -2.881, y: 0.4717245, z: 0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30593,7 +30629,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &735078092
 AudioSource:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
     public FIKIFOW_CameraRotationFocus cameraRotFocus; 
 
     [Header("Trigger Event (Contoh)")]
+    //public GameObject GO_SuaraMisteriusMendekat; // Contoh trigger area untuk memulai event
     public int LanjutanDialog = 0;
     [SerializeField] private bool triggerMulaiLewatInspector = false;
     public Transform titikSuaraKaki;
@@ -19,6 +20,7 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
 
     void Start()
     {
+        //GO_SuaraMisteriusMendekat.SetActive(false); // Nonaktifkan trigger area agar tidak mengganggu gameplay
         // Saat scene mulai, pastikan komponen XCOM dinonaktifkan terlebih dahulu
         if (enemyXcomComponent != null)
         {
@@ -105,18 +107,15 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
                 )
             );
         }
-        
         else if (LanjutanDialog == 1)
         {
-
+            yield return new WaitForSeconds(1f);
             KIRISA_DialogueSystem.Instance.StartDialogCallback(
                 () => 
                 {   
-                    if (FIKIFOWFPS1_FirstPersonEngine.Instance != null)
-                    {
-                        FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
-                    }
-                    Debug.Log("Dialog Selesai");
+                    //FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+                    triggerMulaiLewatInspector = true;
+                    Debug.Log("AAAAAAAAAAAAAAAAAAAAAAA.");
                     
                 },
                 new KirisaDialogLine(
@@ -148,8 +147,7 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
         
 
 
-
         
-       yield return new WaitForSeconds(1f);
+       
     }
 }
