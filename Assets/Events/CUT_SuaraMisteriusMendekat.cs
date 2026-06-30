@@ -10,8 +10,12 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
     public FIKIFOW_CameraRotationFocus cameraRotFocus; 
 
     [Header("Trigger Event (Contoh)")]
+    public int LanjutanDialog = 0;
     [SerializeField] private bool triggerMulaiLewatInspector = false;
     public Transform titikSuaraKaki;
+    [SerializeField] private AudioSource AUS_LangkahPertama;
+    [SerializeField] private AudioClip SFX_LangkahPertama;
+
 
     void Start()
     {
@@ -59,15 +63,21 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
 
     IEnumerator MulaiCutscene_SuaraMisteriusMendekat()
     {
-        int LanjutanDialog = 0;
+        
 
         if (LanjutanDialog == 0)
         {
             KIRISA_DialogueSystem.Instance.StartDialogCallback(
                 () => 
                 {   
-                    cameraRotFocus.TriggerFocus(titikSuaraKaki, 2f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 0f);
+                    if (FIKIFOWFPS1_FirstPersonEngine.Instance != null)
+                    {
+                        FIKIFOWFPS1_FirstPersonEngine.Instance.BlockInput();
+                    }
                     LanjutanDialog = 1;
+                    AUS_LangkahPertama.PlayOneShot(SFX_LangkahPertama);
+                    cameraRotFocus.TriggerFocus(titikSuaraKaki, 2f, FIKIFOW_CameraRotationFocus.InterpolationMode.EaseOut, true, 0f);
+                    Load_SuaraMisteriusMendekat();
                 },
                 new KirisaDialogLine(
                     mode: 1, 
@@ -95,8 +105,10 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
                 )
             );
         }
-        if (LanjutanDialog == 1)
+        
+        else if (LanjutanDialog == 1)
         {
+
             KIRISA_DialogueSystem.Instance.StartDialogCallback(
                 () => 
                 {   
