@@ -1,6 +1,7 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+using System.Collections;
 #endif
 
 [ExecuteAlways] // Memungkinkan script dijalankan sebagian di luar Play Mode[cite: 5]
@@ -199,8 +200,77 @@ public class XCOM_ObjectStepAndMove : MonoBehaviour
             TogglePreview(); //[cite: 5]
         }
     }
+
+    // --- TAMBAHAN UNTUK INTERPOLASI KECEPATAN ---
+    public enum SpeedInterpolationMode { Constant, Linear, EaseIn, EaseOut }
+    private Coroutine speedChangeCoroutine;
+
+    /// <summary>
+    /// Fungsi publik untuk mengubah kecepatan gerak musuh dengan berbagai mode interpolasi.
+    /// </summary>
+    public void SetMoveSpeed(float targetSpeed, float duration = 0f, SpeedInterpolationMode mode = SpeedInterpolationMode.Constant)
+    {
+        // Hentikan coroutine interpolasi sebelumnya jika masih berjalan
+        if (speedChangeCoroutine != null) 
+            StopCoroutine(speedChangeCoroutine);
+
+        // Jika mode Constant atau durasi 0, langsung ubah nilainya seketika
+        if (duration <= 0f || mode == SpeedInterpolationMode.Constant)
+        {
+            moveSpeed = targetSpeed;
+        }
+        else
+        {
+            // Jalankan perpindahan halus lewat Coroutine
+            speedChangeCoroutine = StartCoroutine(AnimateSpeedChange(targetSpeed, duration, mode));
+        }
+    }
+
+    private IEnumerator AnimateSpeedChange(float targetSpeed, float duration, SpeedInterpolationMode mode)
+    {
+        float startSpeed = moveSpeed;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            // Rumus matematika interpolasi
+            switch (mode)
+            {
+                case SpeedInterpolationMode.Linear:
+                    // t tetap t (konstan datar)
+                    break;
+                case SpeedInterpolationMode.EaseIn:
+                    t = t * t; // Lambat di awal, cepat di akhir
+                    break;
+                case SpeedInterpolationMode.EaseOut:
+                    t = t * (2f - t); // Cepat di awal, melambat di akhir
+                    break;
+            }
+
+            // Terapkan nilai kecepatan baru
+            moveSpeed = Mathf.Lerp(startSpeed, targetSpeed, t);
+            yield return null;
+        }
+
+        moveSpeed = targetSpeed;
+        speedChangeCoroutine = null;
+    }
+
+    // --- FUNGSI BARU UNTUK CUTSCENE ---
+    /// <summary>
+    /// Mengubah target point secara dinamis dari skrip luar.
+    /// </summary>
+    public void SetTargetPoint(Transform newTarget)
+    {
+        targetPoint = newTarget;
+    }
 #endif
 }
+
+
 
 // ========================================================
 // CUSTOM INSPECTOR BUTTON DENGAN TOMBOL RESET tambahan

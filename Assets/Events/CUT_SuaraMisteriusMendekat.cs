@@ -7,6 +7,9 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
     [Header("Referensi Objek Misterius")]
     // Tarik Game Object musuh yang memiliki komponen XCOM ke kolom ini di Inspector
     [SerializeField] private XCOM_ObjectStepAndMove enemyXcomComponent;
+
+    public ObjectiveTrigger CONNECT_ObjectiveTrigger;
+
     public FIKIFOW_CameraRotationFocus cameraRotFocus; 
 
     [Header("Trigger Event (Contoh)")]
@@ -16,6 +19,15 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
     public Transform titikSuaraKaki;
     [SerializeField] private AudioSource AUS_LangkahPertama;
     [SerializeField] private AudioClip SFX_LangkahPertama;
+
+    [Header("JAM 12")]
+    [SerializeField] private AudioSource AUS_Jam12;
+    [SerializeField] private AudioClip SFX_Jam12;
+
+    public EVT_NontonTV CONNECT_EVT_NontonTV;
+
+    [Header("Referensi Pergerakan Lanjutan")]
+    [SerializeField] private Transform targetPointKedua; // Tarik target kedua musuh ke sini di Inspector
 
 
     void Start()
@@ -114,8 +126,17 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
                 () => 
                 {   
                     //FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+                    LanjutanDialog = 2;
                     triggerMulaiLewatInspector = true;
-                    Debug.Log("AAAAAAAAAAAAAAAAAAAAAAA.");
+      
+                    Debug.Log("NAH DISINI SI MUSUH MOVE SPEED NYA JADI DIPERCEPAT");
+                    // DISINI
+                    if (enemyXcomComponent != null)
+                    {
+                        // Contoh: Ubah speed dari awal (misal 0.4f) ke 5.0f, dalam durasi 2 detik, pakai EaseOut
+                        //enemyXcomComponent.SetMoveSpeed(5f, 2f, XCOM_ObjectStepAndMove.SpeedInterpolationMode.EaseOut);
+                    }
+                    Load_SuaraMisteriusMendekat();
                     
                 },
                 new KirisaDialogLine(
@@ -144,8 +165,54 @@ public class CUT_SuaraMisteriusMendekat : MonoBehaviour
                 )
             );
         }
-        
+        else if (LanjutanDialog == 2)
+        {
+            yield return new WaitForSeconds(1f);
+            KIRISA_DialogueSystem.Instance.StartDialogCallback(
+                () => 
+                {   
+                    //FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+                    
+                    AUS_Jam12.PlayOneShot(SFX_Jam12);
+                    CONNECT_ObjectiveTrigger.misiBerikutnya = "LARI KE LANTAI 2 & TUTUP PINTU";    
+                    if (FIKIFOW_ObjectiveManager.Instance != null)
+                    {
+                        FIKIFOW_ObjectiveManager.Instance.GantiMisi(CONNECT_ObjectiveTrigger.misiBerikutnya);
+                    }   
+                    LanjutanDialog = 3;
+                    triggerMulaiLewatInspector = true;
+                    Load_SuaraMisteriusMendekat();
+                },
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "...", 
+                    portrait: "", 
+                    voice: ""
+                ),
+                new KirisaDialogLine(
+                    mode: 1, 
+                    duration: 0f,
+                    speaker: "ADRIAN", 
+                    dialog: "Uhh.....", 
+                    portrait: "", 
+                    voice: ""
+                )
+            );
+        }
+        else if (LanjutanDialog == 3)
+        {
+            yield return new WaitForSeconds(4f);
+            
+            FIKIFOWFPS1_FirstPersonEngine.Instance.UnblockInput();
+            LanjutanDialog = 4;
+            CONNECT_EVT_NontonTV.GO_KemunculanSuaraAneh.SetActive(false);
+            enemyXcomComponent.SetTargetPoint(targetPointKedua);
+            enemyXcomComponent.SetMoveSpeed(3f, 0f, XCOM_ObjectStepAndMove.SpeedInterpolationMode.Constant);
 
+            Debug.Log("CUTSCENE SELESAI");
+        }
 
         
        
